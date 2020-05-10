@@ -1,10 +1,10 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Barcode, ScanSettings } from 'scandit-sdk';
+import { Barcode, ScanResult, ScanSettings } from 'scandit-sdk';
 
 @Component({
   selector: 'app-scandit',
   template:
-    '<div><h1>Real</h1><scandit-sdk-barcode-picker [scanSettings]="this.settings" (scan)="onScan($event)"></scandit-sdk-barcode-picker></div>',
+    '<scandit-sdk-barcode-picker [scanSettings]="this.settings" (scan)="onScan($event)"></scandit-sdk-barcode-picker>',
 })
 export class ScanditComponent implements OnInit {
   @Output()
@@ -16,9 +16,9 @@ export class ScanditComponent implements OnInit {
 
   constructor() {}
 
-  onScan(s) {
-    console.log(JSON.stringify(s));
-    const barcodes = s?.barcodes ?? [];
+  onScan(scanResult: ScanResult) {
+    console.log(JSON.stringify(scanResult));
+    const barcodes = scanResult?.barcodes ?? [];
     const codeRead = barcodes[0]?.data;
     if (codeRead) {
       this.code.emit(codeRead);

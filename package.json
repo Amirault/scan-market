@@ -6,7 +6,7 @@
     "start": "ng serve",
     "start-fake": "ng serve -c fake",
     "build": "ng build",
-    "build-prod": "ng build -c prod",
+    "build-prod": "ng build -c production",
     "build-fake": "ng build -c fake",
     "test": "ng test",
     "lint": "ng lint",
