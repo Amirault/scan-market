@@ -1,0 +1,9 @@
+<app-scandit *ngIf="this.isProd()" (code)="this.onCodeAvailable($event)"></app-scandit>
+<app-scan-quagga
+  *ngIf="this.isDev()"
+  (code)="this.onCodeAvailable($event)"
+></app-scan-quagga>
+<app-scan-in-memory
+  *ngIf="this.isFake()"
+  (code)="this.onCodeAvailable($event)"
+></app-scan-in-memory>
