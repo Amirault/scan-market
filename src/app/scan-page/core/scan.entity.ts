@@ -1,7 +1,19 @@
-export function isValidBarcode(barcode: string): boolean {
-  if (barcode.length !== 13) {
-    return false;
+const EAN13BarcodeSymbol = Symbol();
+type EAN13Barcode = string & { [EAN13BarcodeSymbol]: true };
+
+export function parseToEAN13BarCode(
+  barcode: string | undefined
+): EAN13Barcode | undefined {
+  if (barcode === undefined) {
+    return undefined;
+  } else if (validEAN13BarCode(barcode)) {
+    return barcode as EAN13Barcode;
   } else {
+    return undefined;
+  }
+}
+function validEAN13BarCode(barcode: string) {
+  if (barcode.length === 13) {
     const lastDigit = Number(barcode.substring(barcode.length - 1));
     if (isNaN(lastDigit)) {
       return false;
@@ -26,5 +38,7 @@ export function isValidBarcode(barcode: string): boolean {
       const checkSum = (10 - ((evenTotal + oddTotal) % 10)) % 10;
       return checkSum === lastDigit;
     }
+  } else {
+    return false;
   }
 }
