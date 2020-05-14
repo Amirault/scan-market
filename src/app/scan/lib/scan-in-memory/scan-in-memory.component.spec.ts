@@ -1,24 +1,11 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ScanInMemoryComponent } from './scan-in-memory.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { render } from '@testing-library/angular';
 
 describe('ScanInMemoryComponent', () => {
-  let component: ScanInMemoryComponent;
-  let fixture: ComponentFixture<ScanInMemoryComponent>;
-
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ScanInMemoryComponent],
-    }).compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ScanInMemoryComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('should display the component', async () => {
+    await render(ScanInMemoryComponent, {
+      imports: [ReactiveFormsModule],
+    });
   });
 });

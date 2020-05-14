@@ -1,5 +1,5 @@
 const EAN13BarcodeSymbol = Symbol();
-type EAN13Barcode = string & { [EAN13BarcodeSymbol]: true };
+export type EAN13Barcode = string & { [EAN13BarcodeSymbol]: true };
 
 export function parseToEAN13BarCode(
   barcode: string | undefined

@@ -4,7 +4,7 @@ import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-scan-quagga',
-  template: '<div id="scan-zone"></div>',
+  template: '<div data-testid="basic-scan" id="quagga-scan-zone"></div>',
 })
 export class ScanQuaggaComponent implements OnInit {
   @Output()
@@ -17,7 +17,7 @@ export class ScanQuaggaComponent implements OnInit {
       ...DEFAULT_CONFIG,
       inputStream: {
         ...DEFAULT_CONFIG.inputStream,
-        target: this.document.getElementById('scan-zone'),
+        target: this.document.getElementById('quagga-scan-zone'),
       },
     };
     Quagga.init(config, (err) => {

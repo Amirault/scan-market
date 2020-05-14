@@ -1,6 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { isValidBarcode } from '../../core/scan.entity';
 
 @Component({
   selector: 'app-scan-in-memory',
@@ -22,10 +21,6 @@ export class ScanInMemoryComponent implements OnInit {
 
   submitCode() {
     const submittedCode = this.scanForm.value.code;
-    if (isValidBarcode(submittedCode)) {
-      this.code.emit(submittedCode);
-    } else {
-      alert('invalid ean 13 barcode !');
-    }
+    this.code.emit(submittedCode);
   }
 }

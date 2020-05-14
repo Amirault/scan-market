@@ -9,6 +9,8 @@ import { ScanQuaggaComponent } from './scan/lib/scanquagga/scan-quagga.component
 import { ReactiveFormsModule } from '@angular/forms';
 import { ScanInMemoryComponent } from './scan/lib/scan-in-memory/scan-in-memory.component';
 import { ScanPageComponent } from './scan-page/scan-page.component';
+import { environment } from '../environments/environment';
+import { NgxBarcode6Module } from 'ngx-barcode6';
 
 const routes = [{ path: '', component: ScanPageComponent }];
 
@@ -31,8 +33,9 @@ const engineLocation = 'assets/';
     RouterModule.forRoot(routes),
     ScanditSdkModule.forRoot(licenseKey, engineLocation),
     ReactiveFormsModule,
+    NgxBarcode6Module,
   ],
-  providers: [],
+  providers: [{ provide: 'ENV', useValue: environment }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

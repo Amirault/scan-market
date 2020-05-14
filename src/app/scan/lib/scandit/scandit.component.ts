@@ -4,7 +4,7 @@ import { Barcode, ScanResult, ScanSettings } from 'scandit-sdk';
 @Component({
   selector: 'app-scandit',
   template:
-    '<scandit-sdk-barcode-picker [scanSettings]="this.settings" (scan)="onScan($event)"></scandit-sdk-barcode-picker>',
+    '<div data-testid="accurate-scan"><scandit-sdk-barcode-picker [scanSettings]="this.settings" (scan)="onScan($event)"></scandit-sdk-barcode-picker></div>',
 })
 export class ScanditComponent implements OnInit {
   @Output()

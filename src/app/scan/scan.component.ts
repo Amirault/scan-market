@@ -1,12 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { environment } from '../../environments/environment';
-type Dev = 'dev';
-type Fake = 'fake';
-type Prod = 'prod';
-type Mode = Dev | Fake | Prod;
-const DevMode: Dev = 'dev';
-const FakeMode: Fake = 'fake';
-const ProdMode: Prod = 'prod';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-scan',
@@ -14,25 +6,29 @@ const ProdMode: Prod = 'prod';
   styleUrls: ['./scan.component.css'],
 })
 export class ScanComponent implements OnInit {
-  private readonly mode: Mode = environment.mode as Mode;
+  @Input()
+  scannerType: 'manual' | 'basic' | 'accurate';
+
+  @Output()
+  scannedCode = new EventEmitter<string>();
 
   constructor() {}
 
   ngOnInit(): void {}
 
-  onCodeAvailable(code: string) {
-    alert(code);
+  onCodeAvailable(scannedCode: string) {
+    this.scannedCode.emit(scannedCode);
   }
 
-  isDev() {
-    return this.mode === DevMode;
+  isManual() {
+    return this.scannerType === 'manual';
   }
 
-  isFake() {
-    return this.mode === FakeMode;
+  isBasic() {
+    return this.scannerType === 'basic';
   }
 
-  isProd() {
-    return this.mode === ProdMode;
+  isAccurate() {
+    return this.scannerType === 'accurate';
   }
 }
