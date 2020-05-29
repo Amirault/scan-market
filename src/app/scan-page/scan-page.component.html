@@ -1,12 +1,14 @@
-<app-scan
-  [scannerType]="this.env.scanMode"
-  (scannedCode)="this.onScannedCode($event)"
-></app-scan>
+<div style="height: 50px; width: 100px">
+  <app-scan
+    [scannerType]="this.env.scanMode"
+    (scannedCode)="this.onScannedCode($event)"
+  ></app-scan>
+</div>
 <div *ngIf="this.scannedCodes.length > 0">
   <div *ngFor="let scannedCode of this.scannedCodes">
-    {{ scannedCode }}<br /><ngx-barcode6
-      [bc-value]="scannedCode"
-      [bc-format]="'EAN13'"
-    ></ngx-barcode6>
+    {{ scannedCode }}
+    <button [attr.data-testid]="'remove-action-' + scannedCode" type="button">
+      X
+    </button>
   </div>
 </div>
