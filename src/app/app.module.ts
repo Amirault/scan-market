@@ -11,6 +11,8 @@ import { ScanInMemoryComponent } from './scan/lib/scan-in-memory/scan-in-memory.
 import { ScanPageComponent } from './scan-page/scan-page.component';
 import { environment } from '../environments/environment';
 import { NgxBarcode6Module } from 'ngx-barcode6';
+import { ProductInMemoryService } from './scan-page/core/product-in-memory.service';
+import { ProductService } from './scan-page/core/product.service';
 
 const routes = [{ path: '', component: ScanPageComponent }];
 
@@ -35,7 +37,13 @@ const engineLocation = 'assets/';
     ReactiveFormsModule,
     NgxBarcode6Module,
   ],
-  providers: [{ provide: 'ENV', useValue: environment }],
+  providers: [
+    { provide: 'ENV', useValue: environment },
+    {
+      provide: 'ProductService',
+      useValue: new ProductInMemoryService(),
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -3,105 +3,132 @@ import { fireEvent, render, screen } from '@testing-library/angular';
 import { ScanInMemoryComponent } from '../scan/lib/scan-in-memory/scan-in-memory.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ScanComponent } from '../scan/scan.component';
-import { ScanditComponent } from '../scan/lib/scandit/scandit.component';
-import { ScanQuaggaComponent } from '../scan/lib/scanquagga/scan-quagga.component';
+import { ProductInMemoryService } from './core/product-in-memory.service';
+import { ScannedProduct } from './core/product.entity';
+import { EAN13Barcode } from './core/scan.entity';
+
+function EAN13BarcodeFake(code: string = '3270190207924') {
+  return (code as unknown) as EAN13Barcode;
+}
+function productFake(
+  props: Partial<{ code: EAN13Barcode; name: string; price: number }>
+): ScannedProduct {
+  return {
+    code: EAN13BarcodeFake(),
+    name: 'Eau',
+    price: 0.75,
+    ...props,
+  };
+}
+
+function scanPageOptions(
+  {
+    products = [],
+    scanMode = 'manual',
+  }: {
+    products?: ScannedProduct[];
+    scanMode?: 'manual' | 'basic' | 'accurate';
+  } = { products: [], scanMode: 'manual' }
+) {
+  return {
+    imports: [ReactiveFormsModule],
+    declarations: [ScanComponent, ScanInMemoryComponent],
+    providers: [
+      {
+        provide: 'ProductService',
+        useValue: new ProductInMemoryService(products),
+      },
+      {
+        provide: 'ENV',
+        useValue: { scanMode },
+      },
+    ],
+  };
+}
 
 describe('ScanPageComponent', () => {
-  it('should display manual scan the the env is fake', async () => {
-    await render(ScanPageComponent, {
-      imports: [ReactiveFormsModule],
-      declarations: [ScanComponent, ScanInMemoryComponent],
-      providers: [
-        {
-          provide: 'ENV',
-          useValue: { scanMode: 'manual' },
-        },
-      ],
-    });
-    const buttonAddCode = screen.queryByText('+');
-    await expect(buttonAddCode).not.toBeNull();
+  const productA = productFake({
+    code: EAN13BarcodeFake('3270190207924'),
+    name: 'Eau',
+    price: 0.75,
+  });
+  const productB = productFake({
+    code: EAN13BarcodeFake('3257971309114'),
+    name: 'Brioche',
+    price: 3,
   });
 
-  it('should display accurate scan the the env is prod', async () => {
-    await render(ScanPageComponent, {
-      imports: [ReactiveFormsModule],
-      declarations: [ScanComponent, ScanditComponent],
-      providers: [
-        {
-          provide: 'ENV',
-          useValue: { scanMode: 'accurate' },
-        },
-      ],
+  describe('scanned product display', () => {
+    it('should have name, code and price', async () => {
+      // GIVEN
+      const scanPage = await render(
+        ScanPageComponent,
+        scanPageOptions({ products: [productA] })
+      );
+      await expect(screen.queryByText(productA.code.toString())).toBeNull();
+      await expect(screen.queryByText(productA.name.toString())).toBeNull();
+      await expect(screen.queryByText(productA.price.toString())).toBeNull();
+      // WHEN
+      await scanPage.type(
+        screen.getByTestId('manual-scan-input'),
+        productA.code.toString()
+      );
+      fireEvent.click(screen.getByText('+'));
+      await expect(screen.queryByText(productA.code.toString())).not.toBeNull();
+      await expect(screen.queryByText(productA.name.toString())).not.toBeNull();
+      await expect(
+        screen.queryByText(productA.price.toString())
+      ).not.toBeNull();
     });
-    const accurateScan = screen.queryByTestId('accurate-scan');
-    await expect(accurateScan).not.toBeNull();
   });
 
-  it('should display basic scan the the env is dev', async () => {
-    await render(ScanPageComponent, {
-      imports: [ReactiveFormsModule],
-      declarations: [ScanComponent, ScanQuaggaComponent],
-      providers: [
-        {
-          provide: 'ENV',
-          useValue: { scanMode: 'basic' },
-        },
-      ],
-    });
-    const accurateScan = screen.queryByTestId('basic-scan');
-    await expect(accurateScan).not.toBeNull();
-  });
-
-  it('should display the scanned barcode', async () => {
+  it('should display all the scanned product', async () => {
     // GIVEN
-    const scanPage = await render(ScanPageComponent, {
-      imports: [ReactiveFormsModule],
-      declarations: [ScanComponent, ScanInMemoryComponent],
-      providers: [
-        {
-          provide: 'ENV',
-          useValue: { scanMode: 'manual' },
-        },
-      ],
-    });
-    await expect(screen.queryByText('3257971309114')).toBeNull();
+    const scanPage = await render(
+      ScanPageComponent,
+      scanPageOptions({ products: [productA, productB] })
+    );
+    await expect(screen.queryByText(productA.name.toString())).toBeNull();
+    await expect(screen.queryByText(productB.name.toString())).toBeNull();
     // WHEN
     await scanPage.type(
       screen.getByTestId('manual-scan-input'),
-      '3257971309114'
+      productA.code.toString()
+    );
+    fireEvent.click(screen.getByText('+'));
+    await scanPage.type(
+      screen.getByTestId('manual-scan-input'),
+      productB.code.toString()
     );
     fireEvent.click(screen.getByText('+'));
     // THEN
-    await expect(screen.queryByText('3257971309114')).not.toBeNull();
+    await expect(screen.queryByText(productA.name.toString())).not.toBeNull();
+    await expect(screen.queryByText(productB.name.toString())).not.toBeNull();
   });
 
-  it('should display all the scanned barcode', async () => {
-    // GIVEN
-    const scanPage = await render(ScanPageComponent, {
-      imports: [ReactiveFormsModule],
-      declarations: [ScanComponent, ScanInMemoryComponent],
-      providers: [
-        {
-          provide: 'ENV',
-          useValue: { scanMode: 'manual' },
-        },
-      ],
+  describe('scanned product actions', () => {
+    it('should be possible to remove a scanned product', async () => {
+      // GIVEN
+      const scanPage = await render(
+        ScanPageComponent,
+        scanPageOptions({ products: [productA, productB] })
+      );
+      await expect(screen.queryByText(productA.code.toString())).toBeNull();
+      await expect(screen.queryByText(productB.code.toString())).toBeNull();
+      await scanPage.type(
+        screen.getByTestId('manual-scan-input'),
+        productA.code.toString()
+      );
+      fireEvent.click(screen.getByText('+'));
+      await expect(screen.queryByText(productA.code.toString())).not.toBeNull();
+      await expect(screen.queryByText(productA.name.toString())).not.toBeNull();
+      // WHEN
+      fireEvent.click(
+        screen.getByTestId(`remove-action-${productA.code.toString()}`)
+      );
+      // THEN
+      await expect(screen.queryByText(productA.code.toString())).toBeNull();
+      await expect(screen.queryByText(productA.name.toString())).toBeNull();
     });
-    await expect(screen.queryByText('3257971309114')).toBeNull();
-    await expect(screen.queryByText('3270190207924')).toBeNull();
-    // WHEN
-    await scanPage.type(
-      screen.getByTestId('manual-scan-input'),
-      '3270190207924'
-    );
-    fireEvent.click(screen.getByText('+'));
-    await scanPage.type(
-      screen.getByTestId('manual-scan-input'),
-      '3257971309114'
-    );
-    fireEvent.click(screen.getByText('+'));
-    // THEN
-    await expect(screen.queryByText('3257971309114')).not.toBeNull();
-    await expect(screen.queryByText('3270190207924')).not.toBeNull();
   });
 });
