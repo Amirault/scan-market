@@ -33,4 +33,8 @@ export class ScanPageComponent implements OnInit {
       (_) => _.code !== productCode
     );
   }
+
+  basketTotal() {
+    return this.scannedProducts.reduce((acc, c) => acc + c.price, 0);
+  }
 }

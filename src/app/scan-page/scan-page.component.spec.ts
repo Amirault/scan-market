@@ -131,4 +131,41 @@ describe('ScanPageComponent', () => {
       await expect(screen.queryByText(productA.name.toString())).toBeNull();
     });
   });
+
+  describe('basket information', () => {
+    it('should display 0 in basket total when not having scanned product', async () => {
+      // GIVEN
+      await render(
+        ScanPageComponent,
+        scanPageOptions({ products: [productA, productB] })
+      );
+      await expect(screen.queryByText(`Total: 0 Euro(s)`)).not.toBeNull();
+    });
+
+    it('should display the sum of the product in basket total when having scanned products', async () => {
+      // GIVEN
+      const scanPage = await render(
+        ScanPageComponent,
+        scanPageOptions({
+          products: [
+            { ...productA, price: 10 },
+            { ...productB, price: 0.75 },
+          ],
+        })
+      );
+      // WHEN
+      await scanPage.type(
+        screen.getByTestId('manual-scan-input'),
+        productA.code.toString()
+      );
+      fireEvent.click(screen.getByText('+'));
+      await scanPage.type(
+        screen.getByTestId('manual-scan-input'),
+        productB.code.toString()
+      );
+      fireEvent.click(screen.getByText('+'));
+      // THEN
+      await expect(screen.queryByText(`Total: 10.75 Euro(s)`)).not.toBeNull();
+    });
+  });
 });
