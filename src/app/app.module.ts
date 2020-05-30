@@ -13,6 +13,8 @@ import { environment } from '../environments/environment';
 import { NgxBarcode6Module } from 'ngx-barcode6';
 import { ProductInMemoryService } from './scan-page/core/product-in-memory.service';
 import { ProductService } from './scan-page/core/product.service';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { ProductRestService } from './scan-page/core/product-rest.service';
 
 const routes = [{ path: '', component: ScanPageComponent }];
 
@@ -36,12 +38,16 @@ const engineLocation = 'assets/';
     ScanditSdkModule.forRoot(licenseKey, engineLocation),
     ReactiveFormsModule,
     NgxBarcode6Module,
+    HttpClientModule,
   ],
   providers: [
     { provide: 'ENV', useValue: environment },
     {
       provide: 'ProductService',
-      useValue: new ProductInMemoryService(),
+      useFactory: (httpClient: HttpClient) => {
+        return new ProductRestService(httpClient);
+      },
+      deps: [HttpClient],
     },
   ],
   bootstrap: [AppComponent],

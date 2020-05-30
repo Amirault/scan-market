@@ -1,12 +1,18 @@
-<app-scandit
-  *ngIf="this.isAccurate()"
-  (code)="this.onCodeAvailable($event)"
-></app-scandit>
-<app-scan-quagga
-  *ngIf="this.isBasic()"
-  (code)="this.onCodeAvailable($event)"
-></app-scan-quagga>
-<app-scan-in-memory
-  *ngIf="this.isManual()"
-  (code)="this.onCodeAvailable($event)"
-></app-scan-in-memory>
+<div *ngIf="this.isAccurate()">
+  <app-scandit (code)="this.onCodeAvailable($event)"></app-scandit>
+  <app-scan-in-memory
+    *ngIf="this.isManual()"
+    (code)="this.onCodeAvailable($event)"
+  ></app-scan-in-memory>
+</div>
+<div *ngIf="this.isBasic()">
+  <app-scan-quagga (code)="this.onCodeAvailable($event)"></app-scan-quagga>
+  <app-scan-in-memory
+    (code)="this.onCodeAvailable($event)"
+  ></app-scan-in-memory>
+</div>
+<div *ngIf="this.isManual()">
+  <app-scan-in-memory
+    (code)="this.onCodeAvailable($event)"
+  ></app-scan-in-memory>
+</div>

@@ -1,6 +1,7 @@
 import { EAN13Barcode } from './scan.entity';
+import { ScannedProduct } from './product.entity';
 
-export const productFakeData = [
+export const productFakeData: ScannedProduct[] = [
   {
     name: 'Brioche Tranchée',
     code: (3270190207924 as unknown) as EAN13Barcode,

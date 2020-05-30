@@ -21,8 +21,9 @@ export class ScanPageComponent implements OnInit {
   onScannedCode(scannedCode: string) {
     const code = parseToEAN13BarCode(scannedCode);
     if (code) {
-      const product = this.productService.product(code);
-      this.scannedProducts = [product, ...this.scannedProducts];
+      this.productService.product(code).subscribe((product) => {
+        this.scannedProducts = [product, ...this.scannedProducts];
+      });
     } else {
       alert('Invalid ean 13 barcode !');
     }
@@ -35,6 +36,6 @@ export class ScanPageComponent implements OnInit {
   }
 
   basketTotal() {
-    return this.scannedProducts.reduce((acc, c) => acc + c.price, 0);
+    return this.scannedProducts.reduce((acc, c) => acc + (c.price ?? 0), 0);
   }
 }

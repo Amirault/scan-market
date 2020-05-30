@@ -80,6 +80,76 @@ describe('ScanPageComponent', () => {
         screen.queryByText(productA.price.toString())
       ).not.toBeNull();
     });
+
+    it('should display empty when not having corresponding name', async () => {
+      // GIVEN
+      const productWithoutName = productFake({
+        code: EAN13BarcodeFake('3270190207924'),
+        name: undefined,
+        price: 1.5,
+      });
+      const scanPage = await render(
+        ScanPageComponent,
+        scanPageOptions({ products: [productWithoutName] })
+      );
+      await expect(
+        screen.queryByText(productWithoutName.code.toString())
+      ).toBeNull();
+      await expect(
+        screen.queryByText(productWithoutName.price.toString())
+      ).toBeNull();
+      await expect(screen.queryByText('-')).toBeNull();
+      // WHEN
+      await scanPage.type(
+        screen.getByTestId('manual-scan-input'),
+        productA.code.toString()
+      );
+      fireEvent.click(screen.getByText('+'));
+      // THEN
+      await expect(
+        screen.queryByText(productWithoutName.code.toString())
+      ).not.toBeNull();
+      await expect(
+        screen.queryByText(productWithoutName.price.toString())
+      ).not.toBeNull();
+      await expect(screen.queryByText('-')).not.toBeNull();
+    });
+
+    it('should display empty when not having corresponding price', async () => {
+      // GIVEN
+      const productWithoutPrice = productFake({
+        code: EAN13BarcodeFake('3270190207924'),
+        name: 'eau',
+        price: undefined,
+      });
+      const scanPage = await render(
+        ScanPageComponent,
+        scanPageOptions({
+          products: [productWithoutPrice],
+        })
+      );
+      await expect(
+        screen.queryByText(productWithoutPrice.code.toString())
+      ).toBeNull();
+      await expect(
+        screen.queryByText(productWithoutPrice.name.toString())
+      ).toBeNull();
+      await expect(screen.queryByText('-')).toBeNull();
+      // WHEN
+      await scanPage.type(
+        screen.getByTestId('manual-scan-input'),
+        productWithoutPrice.code.toString()
+      );
+      fireEvent.click(screen.getByText('+'));
+      // THEN
+      await expect(
+        screen.queryByText(productWithoutPrice.code.toString())
+      ).not.toBeNull();
+      await expect(
+        screen.queryByText(productWithoutPrice.name.toString())
+      ).not.toBeNull();
+      await expect(screen.queryByText('-')).not.toBeNull();
+    });
   });
 
   it('should display all the scanned product', async () => {

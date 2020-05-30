@@ -1,17 +1,25 @@
-<div style="height: 50px; width: 100px">
+<div style="position:fixed; display: block; height: 50px; width: 100px">
   <app-scan
     [scannerType]="this.env.scanMode"
     (scannedCode)="this.onScannedCode($event)"
   ></app-scan>
 </div>
+<br />
+<br />
 <div *ngIf="this.scannedProducts.length > 0">
   <div *ngFor="let scannedProduct of this.scannedProducts">
-    <span>{{ scannedProduct.code }}</span><span>{{scannedProduct.name}}</span><span>{{scannedProduct.price}}</span>
-    <button [attr.data-testid]="'remove-action-' + scannedProduct.code" (click)="this.onRemoveProduct(scannedProduct.code)" type="button">
+    <span>{{ scannedProduct.code }}</span
+    >/<span>{{ scannedProduct.name ? scannedProduct.name : "-" }}</span
+    >/<span>{{ scannedProduct.price ? scannedProduct.price : "-" }}</span>
+    <button
+      [attr.data-testid]="'remove-action-' + scannedProduct.code"
+      (click)="this.onRemoveProduct(scannedProduct.code)"
+      type="button"
+    >
       X
     </button>
   </div>
 </div>
 <div>
-  <span>Total: {{this.basketTotal()}} Euro(s)</span>
+  <span>Total: {{ this.basketTotal() }} Euro(s)</span>
 </div>
