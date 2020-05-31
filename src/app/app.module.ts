@@ -19,6 +19,7 @@ import { ScanManuallyComponent } from './scanned-products/scan-manually/scan-man
 import { ScanUseCases } from './core/scan/scan.use-cases';
 import { CodeSource } from './core/scan/code.source';
 import { CodeInMemorySource } from './core/scan/adapters/code-in-memory.source';
+import { MenuComponent } from './menu/menu.component';
 
 const routes = [
   { path: 'scanned-products', component: ScannedProductsComponent },
@@ -44,6 +45,7 @@ const engineLocation = 'assets/';
     ScanPageComponent,
     ScannedProductsComponent,
     ScanManuallyComponent,
+    MenuComponent,
   ],
   imports: [
     BrowserModule,
