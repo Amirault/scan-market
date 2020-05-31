@@ -1,5 +1,5 @@
-import { EAN13Barcode } from './scan.entity';
-import { ScannedProduct } from './product.entity';
+import { EAN13Barcode } from '../scan.entity';
+import { ScannedProduct } from '../product.entity';
 
 export const productFakeData: ScannedProduct[] = [
   {

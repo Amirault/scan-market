@@ -2,21 +2,11 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-scan-in-memory',
-  template: `
-    <form [formGroup]="scanForm" (ngSubmit)="this.submitCode()">
-      <label>
-        <input
-          data-testid="manual-scan-input"
-          type="text"
-          formControlName="code"
-        />
-      </label>
-      <button type="submit">+</button>
-    </form>
-  `,
+  selector: 'app-manually',
+  templateUrl: './scan-manually.component.html',
+  styleUrls: ['./scan-manually.component.scss'],
 })
-export class ScanInMemoryComponent implements OnInit {
+export class ScanManuallyComponent implements OnInit {
   @Output()
   code = new EventEmitter<string>();
   scanForm: FormGroup;

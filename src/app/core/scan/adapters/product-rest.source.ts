@@ -1,11 +1,12 @@
-import { EAN13Barcode } from './scan.entity';
-import { ProductService } from './product.service';
-import { ScannedProduct } from './product.entity';
+import { EAN13Barcode } from '../scan.entity';
+import { ProductSource } from '../product.source';
+import { ScannedProduct } from '../product.entity';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Observable, zip } from 'rxjs';
+import { Injectable } from '@angular/core';
 
-export class ProductRestService implements ProductService {
+export class ProductRestSource implements ProductSource {
   constructor(private readonly httpClient: HttpClient) {
     console.log('ProductRestService instantiated');
   }

@@ -3,9 +3,14 @@ import { fireEvent, render, screen } from '@testing-library/angular';
 import { ScanInMemoryComponent } from '../scan/lib/scan-in-memory/scan-in-memory.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ScanComponent } from '../scan/scan.component';
-import { ProductInMemoryService } from './core/product-in-memory.service';
-import { ScannedProduct } from './core/product.entity';
-import { EAN13Barcode } from './core/scan.entity';
+import { ScannedProduct } from '../core/scan/product.entity';
+import { EAN13Barcode } from '../core/scan/scan.entity';
+import { ScanUseCases } from '../core/scan/scan.use-cases';
+import { fakeAsync, TestBed } from '@angular/core/testing';
+import { CodeSource } from '../core/scan/code.source';
+import { ProductInMemorySource } from '../core/scan/adapters/product-in-memory.source';
+import { CodeInMemorySource } from '../core/scan/adapters/code-in-memory.source';
+import { ProductSource } from '../core/scan/product.source';
 
 function EAN13BarcodeFake(code: string = '3270190207924') {
   return (code as unknown) as EAN13Barcode;
@@ -23,7 +28,6 @@ function productFake(
 
 function scanPageOptions(
   {
-    products = [],
     scanMode = 'manual',
   }: {
     products?: ScannedProduct[];
@@ -34,9 +38,14 @@ function scanPageOptions(
     imports: [ReactiveFormsModule],
     declarations: [ScanComponent, ScanInMemoryComponent],
     providers: [
+      ScanUseCases,
       {
-        provide: 'ProductService',
-        useValue: new ProductInMemoryService(products),
+        provide: CodeSource,
+        useValue: new CodeInMemorySource(),
+      },
+      {
+        provide: ProductSource,
+        useValue: new ProductInMemorySource(),
       },
       {
         provide: 'ENV',
@@ -58,184 +67,24 @@ describe('ScanPageComponent', () => {
     price: 3,
   });
 
-  describe('scanned product display', () => {
-    it('should have name, code and price', async () => {
-      // GIVEN
-      const scanPage = await render(
-        ScanPageComponent,
-        scanPageOptions({ products: [productA] })
-      );
-      await expect(screen.queryByText(productA.code.toString())).toBeNull();
-      await expect(screen.queryByText(productA.name.toString())).toBeNull();
-      await expect(screen.queryByText(productA.price.toString())).toBeNull();
-      // WHEN
-      await scanPage.type(
-        screen.getByTestId('manual-scan-input'),
-        productA.code.toString()
-      );
-      fireEvent.click(screen.getByText('+'));
-      await expect(screen.queryByText(productA.code.toString())).not.toBeNull();
-      await expect(screen.queryByText(productA.name.toString())).not.toBeNull();
-      await expect(
-        screen.queryByText(productA.price.toString())
-      ).not.toBeNull();
-    });
-
-    it('should display empty when not having corresponding name', async () => {
-      // GIVEN
-      const productWithoutName = productFake({
-        code: EAN13BarcodeFake('3270190207924'),
-        name: undefined,
-        price: 1.5,
-      });
-      const scanPage = await render(
-        ScanPageComponent,
-        scanPageOptions({ products: [productWithoutName] })
-      );
-      await expect(
-        screen.queryByText(productWithoutName.code.toString())
-      ).toBeNull();
-      await expect(
-        screen.queryByText(productWithoutName.price.toString())
-      ).toBeNull();
-      await expect(screen.queryByText('-')).toBeNull();
-      // WHEN
-      await scanPage.type(
-        screen.getByTestId('manual-scan-input'),
-        productA.code.toString()
-      );
-      fireEvent.click(screen.getByText('+'));
-      // THEN
-      await expect(
-        screen.queryByText(productWithoutName.code.toString())
-      ).not.toBeNull();
-      await expect(
-        screen.queryByText(productWithoutName.price.toString())
-      ).not.toBeNull();
-      await expect(screen.queryByText('-')).not.toBeNull();
-    });
-
-    it('should display empty when not having corresponding price', async () => {
-      // GIVEN
-      const productWithoutPrice = productFake({
-        code: EAN13BarcodeFake('3270190207924'),
-        name: 'eau',
-        price: undefined,
-      });
-      const scanPage = await render(
-        ScanPageComponent,
-        scanPageOptions({
-          products: [productWithoutPrice],
-        })
-      );
-      await expect(
-        screen.queryByText(productWithoutPrice.code.toString())
-      ).toBeNull();
-      await expect(
-        screen.queryByText(productWithoutPrice.name.toString())
-      ).toBeNull();
-      await expect(screen.queryByText('-')).toBeNull();
-      // WHEN
-      await scanPage.type(
-        screen.getByTestId('manual-scan-input'),
-        productWithoutPrice.code.toString()
-      );
-      fireEvent.click(screen.getByText('+'));
-      // THEN
-      await expect(
-        screen.queryByText(productWithoutPrice.code.toString())
-      ).not.toBeNull();
-      await expect(
-        screen.queryByText(productWithoutPrice.name.toString())
-      ).not.toBeNull();
-      await expect(screen.queryByText('-')).not.toBeNull();
-    });
-  });
-
-  it('should display all the scanned product', async () => {
-    // GIVEN
-    const scanPage = await render(
-      ScanPageComponent,
-      scanPageOptions({ products: [productA, productB] })
-    );
-    await expect(screen.queryByText(productA.name.toString())).toBeNull();
-    await expect(screen.queryByText(productB.name.toString())).toBeNull();
-    // WHEN
-    await scanPage.type(
-      screen.getByTestId('manual-scan-input'),
-      productA.code.toString()
-    );
-    fireEvent.click(screen.getByText('+'));
-    await scanPage.type(
-      screen.getByTestId('manual-scan-input'),
-      productB.code.toString()
-    );
-    fireEvent.click(screen.getByText('+'));
-    // THEN
-    await expect(screen.queryByText(productA.name.toString())).not.toBeNull();
-    await expect(screen.queryByText(productB.name.toString())).not.toBeNull();
-  });
-
   describe('scanned product actions', () => {
-    it('should be possible to remove a scanned product', async () => {
+    it('should save the scanned product', fakeAsync(async () => {
       // GIVEN
       const scanPage = await render(
         ScanPageComponent,
-        scanPageOptions({ products: [productA, productB] })
+        scanPageOptions({ products: [] })
       );
-      await expect(screen.queryByText(productA.code.toString())).toBeNull();
-      await expect(screen.queryByText(productB.code.toString())).toBeNull();
-      await scanPage.type(
-        screen.getByTestId('manual-scan-input'),
-        productA.code.toString()
-      );
-      fireEvent.click(screen.getByText('+'));
-      await expect(screen.queryByText(productA.code.toString())).not.toBeNull();
-      await expect(screen.queryByText(productA.name.toString())).not.toBeNull();
-      // WHEN
-      fireEvent.click(
-        screen.getByTestId(`remove-action-${productA.code.toString()}`)
-      );
-      // THEN
-      await expect(screen.queryByText(productA.code.toString())).toBeNull();
-      await expect(screen.queryByText(productA.name.toString())).toBeNull();
-    });
-  });
-
-  describe('basket information', () => {
-    it('should display 0 in basket total when not having scanned product', async () => {
-      // GIVEN
-      await render(
-        ScanPageComponent,
-        scanPageOptions({ products: [productA, productB] })
-      );
-      await expect(screen.queryByText(`Total: 0 Euro(s)`)).not.toBeNull();
-    });
-
-    it('should display the sum of the product in basket total when having scanned products', async () => {
-      // GIVEN
-      const scanPage = await render(
-        ScanPageComponent,
-        scanPageOptions({
-          products: [
-            { ...productA, price: 10 },
-            { ...productB, price: 0.75 },
-          ],
-        })
-      );
+      const scanUseCases = TestBed.inject(ScanUseCases);
       // WHEN
       await scanPage.type(
         screen.getByTestId('manual-scan-input'),
         productA.code.toString()
       );
       fireEvent.click(screen.getByText('+'));
-      await scanPage.type(
-        screen.getByTestId('manual-scan-input'),
-        productB.code.toString()
-      );
-      fireEvent.click(screen.getByText('+'));
       // THEN
-      await expect(screen.queryByText(`Total: 10.75 Euro(s)`)).not.toBeNull();
-    });
+      await scanUseCases
+        .scannedProducts()
+        .subscribe((products) => expect(products.length === 1).toBeTrue());
+    }));
   });
 });

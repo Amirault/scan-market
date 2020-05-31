@@ -1,0 +1,35 @@
+<app-manually (code)="this.onScannedCode($event)"></app-manually>
+<div *ngIf="this.scannedProducts.length > 0">
+  <div class="list-group">
+    <div
+      *ngFor="let scannedProduct of this.scannedProducts"
+      class="list-group-item list-group-item-action"
+    >
+      <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">
+          {{ scannedProduct.name ? scannedProduct.name : "-" }}
+        </h5>
+        <a
+          style="color: red"
+          [attr.data-testid]="'remove-action-' + scannedProduct.code"
+          (click)="this.onRemoveProduct(scannedProduct.code)"
+          type="button"
+        >
+          X
+        </a>
+        <span class="text-muted">
+          {{ scannedProduct.price !== undefined ? scannedProduct.price : "-" }}€
+        </span>
+      </div>
+      <small>{{ scannedProduct.code }}</small>
+    </div>
+    <a href="#" class="list-group-item list-group-item-action">
+      <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">
+          Total :
+        </h5>
+        <span class="text-muted">{{ this.productTotal() }}€</span>
+      </div>
+    </a>
+  </div>
+</div>

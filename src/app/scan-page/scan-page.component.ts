@@ -1,41 +1,21 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { EAN13Barcode, parseToEAN13BarCode } from './core/scan.entity';
 import { environment } from '../../environments/environment';
-import { ProductService } from './core/product.service';
-import { ScannedProduct } from './core/product.entity';
+import { ScanUseCases } from '../core/scan/scan.use-cases';
 
 @Component({
   selector: 'app-scan-page',
   templateUrl: './scan-page.component.html',
-  styleUrls: ['./scan-page.component.css'],
+  styleUrls: ['./scan-page.component.scss'],
 })
 export class ScanPageComponent implements OnInit {
-  scannedProducts: ScannedProduct[] = [];
   constructor(
     @Inject('ENV') readonly env: typeof environment,
-    @Inject('ProductService') public productService: ProductService
+    private readonly scanUseCases: ScanUseCases
   ) {}
 
   ngOnInit(): void {}
 
   onScannedCode(scannedCode: string) {
-    const code = parseToEAN13BarCode(scannedCode);
-    if (code) {
-      this.productService.product(code).subscribe((product) => {
-        this.scannedProducts = [product, ...this.scannedProducts];
-      });
-    } else {
-      alert('Invalid ean 13 barcode !');
-    }
-  }
-
-  onRemoveProduct(productCode: EAN13Barcode) {
-    this.scannedProducts = this.scannedProducts.filter(
-      (_) => _.code !== productCode
-    );
-  }
-
-  basketTotal() {
-    return this.scannedProducts.reduce((acc, c) => acc + (c.price ?? 0), 0);
+    this.scanUseCases.saveProductCode(scannedCode).subscribe();
   }
 }

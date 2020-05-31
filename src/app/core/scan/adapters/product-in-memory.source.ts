@@ -1,10 +1,10 @@
-import { EAN13Barcode } from './scan.entity';
+import { EAN13Barcode } from '../scan.entity';
 import { productFakeData } from './fakeProductData';
-import { ProductService } from './product.service';
-import { ScannedProduct } from './product.entity';
+import { ProductSource } from '../product.source';
+import { ScannedProduct } from '../product.entity';
 import { Observable, of } from 'rxjs';
 
-export class ProductInMemoryService implements ProductService {
+export class ProductInMemorySource implements ProductSource {
   constructor(private readonly products = productFakeData) {}
 
   product(code: EAN13Barcode): Observable<ScannedProduct | undefined> {

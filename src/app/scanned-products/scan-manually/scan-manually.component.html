@@ -1,0 +1,22 @@
+<form [formGroup]="scanForm" (ngSubmit)="this.submitCode()">
+  <div class="input-group mb-3">
+    <input
+      data-testid="manual-scan-input"
+      type="text"
+      class="form-control"
+      placeholder="Code"
+      aria-label="Code"
+      aria-describedby="button-addon2"
+      formControlName="code"
+    />
+    <div class="input-group-append">
+      <button
+        class="btn btn-outline-secondary"
+        type="submit"
+        id="button-addon2"
+      >
+        +
+      </button>
+    </div>
+  </div>
+</form>
