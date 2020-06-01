@@ -2,11 +2,12 @@
   style="bottom: 0; position: fixed; left: 0; right: 0"
   class="btn-group btn-group-toggle"
   data-toggle="buttons"
+  xmlns="http://www.w3.org/1999/html"
 >
-  <label class="btn btn-secondary active">
-    <a routerLink="/scan"> Scan</a>
-  </label>
-  <label class="btn btn-secondary">
-    <a routerLink="/scanned-products"> List</a>
-  </label>
+  <Button (click)="goToScan()" class="btn btn-secondary active">
+    Scan
+  </Button>
+  <button (click)="goToScannedProducts()" class="btn btn-secondary">
+    List
+  </button>
 </div>
