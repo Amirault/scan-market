@@ -11,6 +11,8 @@ import { CodeSource } from '../core/scan/code.source';
 import { ProductInMemorySource } from '../core/scan/adapters/product-in-memory.source';
 import { CodeInMemorySource } from '../core/scan/adapters/code-in-memory.source';
 import { ProductSource } from '../core/scan/product.source';
+import { RouterModule } from '@angular/router';
+import { ScannedProductsComponent } from '../scanned-products/scanned-products.component';
 
 function EAN13BarcodeFake(code: string = '3270190207924') {
   return (code as unknown) as EAN13Barcode;
@@ -50,6 +52,12 @@ function scanPageOptions(
       {
         provide: 'ENV',
         useValue: { scanMode },
+      },
+    ],
+    routes: [
+      {
+        path: 'scanned-products',
+        component: ScannedProductsComponent,
       },
     ],
   };
