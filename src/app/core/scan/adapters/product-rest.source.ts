@@ -23,13 +23,13 @@ export class ProductRestSource implements ProductSource {
 
   private productInformation(code: EAN13Barcode) {
     return this.httpClient.get<{ product: { product_name: string } }>(
-      `https://world.openfoodfacts.org/api/v0/product/${code.toString()}.json`
+      `/info/${code.toString()}`
     );
   }
 
   private productPrice(code: EAN13Barcode): Observable<number | undefined> {
     return this.httpClient
-      .get(`https://www.carrefour.fr/s?q=${code}`, {
+      .get(`/price/${code}`, {
         responseType: 'text',
       })
       .pipe(
