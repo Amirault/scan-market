@@ -1,11 +1,12 @@
-var express = require("express");
-var bodyParser = require("body-parser");
-var fetch = require("node-fetch");
-var request = require('request');
+import express from "express";
+import bodyParser from "body-parser";
+import fetch from "node-fetch";
+import request from "request";
+import path from 'path';
+const __dirname = path.resolve();
 
 var app = express();
 app.use(bodyParser.json());
-
 // Create link to Angular build directory
 var distDir = __dirname + "/dist/";
 app.use(express.static(distDir));
