@@ -3,18 +3,18 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "start-dev": "export SCAN_MODE=basic && npm run config && ng serve",
-    "start-fake": "export SCAN_MODE=manual && npm run config && ng serve",
-    "start-prod": "npm run build-prod && npm run start",
+    "start-dev": "export SCAN_MODE=basic && yarn config && ng serve",
+    "start-fake": "export SCAN_MODE=manual && yarn config && ng serve",
+    "start-prod": "yarn build-prod && yarn start",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "prety": "prettier --write \"src/**/*.ts\"",
     "config": "ts-node set-env.mjs",
-    "start": "npm run config && node server.js",
-    "build-prod": "npm run config && ng build --output-path dist",
-    "postinstall": "npm run build-prod"
+    "start": "yarn config && node server.js",
+    "build-prod": "yarn config && ng build --output-path dist",
+    "postinstall": "yarn build-prod"
   },
   "private": true,
   "dependencies": {
