@@ -13,7 +13,7 @@
     "prety": "prettier --write \"src/**/*.ts\"",
     "config": "ts-node set-env.mjs",
     "start": "npm run config && node server.js",
-    "build-prod": "ng build -c production --output-path dist",
+    "build-prod": "npm run config && ng build -c production --output-path dist",
     "postinstall": "npm run build-prod"
   },
   "private": true,
