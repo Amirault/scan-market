@@ -14,7 +14,7 @@
     "config:env": "ts-node set-env.mjs",
     "start": "yarn config:env && node server.js",
     "build-prod": "yarn config:env && ng build --output-path dist",
-    "postinstall": "yarn build-prod"
+    "postinstall": "yarn config:env && ng build --output-path dist"
   },
   "private": true,
   "dependencies": {
