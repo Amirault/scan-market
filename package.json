@@ -12,7 +12,7 @@
     "e2e": "ng e2e",
     "prety": "prettier --write \"src/**/*.ts\"",
     "config:env": "ts-node set-env.mjs",
-    "start": "yarn config:env && node server.js",
+    "start": "node server.js",
     "build-prod": "yarn config:env && ng build --output-path dist",
     "postinstall": "yarn config:env && ng build --output-path dist"
   },
@@ -40,8 +40,7 @@
     "scandit-sdk": "^4.6.3",
     "scandit-sdk-angular": "^2.0.7",
     "tslib": "^1.10.0",
-    "zone.js": "~0.10.2",
-    "ts-node": "~8.3.0"
+    "zone.js": "~0.10.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.901.5",
@@ -63,7 +62,8 @@
     "protractor": "~5.4.3",
     "tslint": "~6.1.0",
     "typescript": "~3.8.3",
-    "dotenv": "^5.0.0"
+    "dotenv": "^5.0.0",
+    "ts-node": "~8.3.0"
   },
   "husky": {
     "hooks": {
