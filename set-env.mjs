@@ -14,5 +14,7 @@ const envConfigFile = `export const environment = {
 writeFile(targetPath, envConfigFile, err => {
   if (err) {
     throw console.error(err);
+  } else {
+    console.log(JSON.stringify(envConfigFile))
   }
 });
