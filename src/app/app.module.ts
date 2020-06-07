@@ -20,6 +20,7 @@ import { ScanUseCases } from './core/scan/scan.use-cases';
 import { CodeSource } from './core/scan/code.source';
 import { CodeInMemorySource } from './core/scan/adapters/code-in-memory.source';
 import { MenuComponent } from './menu/menu.component';
+import { ProductInMemorySource } from './core/scan/adapters/product-in-memory.source';
 
 const routes = [
   { path: 'scanned-products', component: ScannedProductsComponent },
@@ -58,7 +59,9 @@ const engineLocation = 'assets/';
     {
       provide: ProductSource,
       useFactory: (httpClient: HttpClient) => {
-        return new ProductRestSource(httpClient);
+        return environment.production
+          ? new ProductRestSource(httpClient)
+          : new ProductInMemorySource();
       },
       deps: [HttpClient],
     },

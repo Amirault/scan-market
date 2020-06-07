@@ -6,6 +6,12 @@ import { forkJoin, Observable, of } from 'rxjs';
 import { flatMap, map } from 'rxjs/operators';
 import { ScannedProduct } from './product.entity';
 
+function toCodesWithOccurrence(c: EAN13Barcode[]): Map<EAN13Barcode, number> {
+  return c.reduce((acc, c) => {
+    return acc.set(c, acc.has(c) ? acc.get(c) + 1 : 1);
+  }, new Map<EAN13Barcode, number>());
+}
+
 @Injectable()
 export class ScanUseCases {
   constructor(
@@ -23,20 +29,31 @@ export class ScanUseCases {
   }
 
   scannedProducts(): Observable<ScannedProduct[]> {
-    return this.codeSource.all().pipe(
+    const codesWithOccurrence = this.codeSource
+      .all()
+      .pipe(map(toCodesWithOccurrence));
+    return codesWithOccurrence.pipe(
       flatMap((codes) => {
-        return codes.length > 0
-          ? forkJoin(codes.map((_) => this.productSource.product(_)))
+        return codes.size > 0
+          ? forkJoin(
+              Array.from(codes.keys()).map((code) => {
+                return this.productSource.product(code).pipe(
+                  map((_) => {
+                    return { quantity: codes.get(code), ..._ };
+                  })
+                );
+              })
+            )
           : of([]);
       })
     );
   }
 
   removeProduct(code: EAN13Barcode): Observable<void> {
-    return this.codeSource.delete(code);
+    return this.codeSource.deleteOne(code);
   }
 
   productTotal(products: ScannedProduct[]): number {
-    return products.reduce((acc, c) => acc + (c.price ?? 0), 0);
+    return products.reduce((acc, c) => acc + (c.price ?? 0) * c.quantity, 0);
   }
 }

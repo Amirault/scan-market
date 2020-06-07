@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/angular';
 import { ReactiveFormsModule } from '@angular/forms';
 import { EAN13Barcode } from '../core/scan/scan.entity';
-import { ScannedProduct } from '../core/scan/product.entity';
+import { Product } from '../core/scan/product.entity';
 import { ScannedProductsComponent } from './scanned-products.component';
 import { ScanManuallyComponent } from './scan-manually/scan-manually.component';
 import { ScanUseCases } from '../core/scan/scan.use-cases';
@@ -16,7 +16,7 @@ function EAN13BarcodeFake(code: string = '3270190207924') {
 }
 function productFake(
   props: Partial<{ code: EAN13Barcode; name: string; price: number }>
-): ScannedProduct {
+): Product {
   return {
     code: EAN13BarcodeFake(),
     name: 'Eau',
@@ -29,7 +29,7 @@ function scanPageOptions(
   {
     products = [],
   }: {
-    products?: ScannedProduct[];
+    products?: Product[];
   } = { products: [] }
 ) {
   return {
@@ -126,15 +126,34 @@ describe('ScanPageComponent', () => {
       await expect(screen.queryByText('-€')).not.toBeNull();
     }));
 
-    it('should display all the scanned product', fakeAsync(async () => {
+    it('should display the quantity when single product', fakeAsync(async () => {
       // GIVEN
       await render(
         ScannedProductsComponent,
-        scanPageOptions({ products: [productA, productB] })
+        scanPageOptions({ products: [productA] })
       );
       // THEN
-      await expect(screen.queryByText(productA.name)).not.toBeNull();
-      await expect(screen.queryByText(productB.name)).not.toBeNull();
+      await expect(screen.queryByText(`Qty: 1`)).not.toBeNull();
+    }));
+
+    it('should display the quantity when multiple same product', fakeAsync(async () => {
+      // GIVEN
+      await render(
+        ScannedProductsComponent,
+        scanPageOptions({ products: [productA, productA, productA] })
+      );
+      // THEN
+      await expect(screen.queryByText(`Qty: 3`)).not.toBeNull();
+    }));
+
+    it('should display only one product information when multiple of the same product', fakeAsync(async () => {
+      // GIVEN
+      await render(
+        ScannedProductsComponent,
+        scanPageOptions({ products: [productA, productA] })
+      );
+      // THEN
+      await expect(screen.getAllByText(productA.name).length).toEqual(1);
     }));
   });
 
@@ -152,6 +171,40 @@ describe('ScanPageComponent', () => {
       // THEN
       await expect(screen.queryByText(productA.name)).toBeNull();
       await expect(screen.queryByText(productB.name)).not.toBeNull();
+    }));
+
+    it('should be possible to add more quantity', fakeAsync(async () => {
+      // GIVEN
+      await render(
+        ScannedProductsComponent,
+        scanPageOptions({ products: [productA] })
+      );
+      await expect(screen.queryByText(productA.name)).not.toBeNull();
+      await expect(screen.queryByText(`Qty: 1`)).not.toBeNull();
+      // WHEN
+      fireEvent.click(
+        screen.getByTestId(`add-action-${productA.code.toString()}`)
+      );
+      // THEN
+      await expect(screen.queryByText(productA.name)).not.toBeNull();
+      await expect(screen.queryByText(`Qty: 2`)).not.toBeNull();
+    }));
+
+    it('should be possible to remove quantity', fakeAsync(async () => {
+      // GIVEN
+      await render(
+        ScannedProductsComponent,
+        scanPageOptions({ products: [productA, productA] })
+      );
+      await expect(screen.queryByText(productA.name)).not.toBeNull();
+      await expect(screen.queryByText(`Qty: 2`)).not.toBeNull();
+      // WHEN
+      fireEvent.click(
+        screen.getByTestId(`remove-action-${productA.code.toString()}`)
+      );
+      // THEN
+      await expect(screen.queryByText(productA.name)).not.toBeNull();
+      await expect(screen.queryByText(`Qty: 1`)).not.toBeNull();
     }));
   });
 
@@ -177,6 +230,23 @@ describe('ScanPageComponent', () => {
       // THEN
       await expect(screen.queryByText(`Total :`)).not.toBeNull();
       await expect(screen.queryByText(`10.75€`)).not.toBeNull();
+    }));
+
+    it('should have the total corresponding to the product quantity', fakeAsync(async () => {
+      // GIVEN
+      await render(
+        ScannedProductsComponent,
+        scanPageOptions({
+          products: [
+            { ...productA, price: 10 },
+            { ...productA, price: 10 },
+            { ...productB, price: 0.75 },
+          ],
+        })
+      );
+      // THEN
+      await expect(screen.queryByText(`Total :`)).not.toBeNull();
+      await expect(screen.queryByText(`20.75€`)).not.toBeNull();
     }));
   });
 });

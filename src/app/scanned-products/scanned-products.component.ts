@@ -29,6 +29,10 @@ export class ScannedProductsComponent implements OnInit {
     this.scanUseCases.removeProduct(productCode).subscribe();
   }
 
+  onAddProduct(productCode: EAN13Barcode) {
+    this.scanUseCases.saveProductCode(productCode).subscribe();
+  }
+
   productTotal() {
     return this.scanUseCases.productTotal(this.scannedProducts);
   }

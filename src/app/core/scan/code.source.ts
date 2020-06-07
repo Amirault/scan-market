@@ -6,5 +6,5 @@ export abstract class CodeSource {
 
   abstract all(): Observable<EAN13Barcode[]>;
 
-  abstract delete(code: EAN13Barcode): Observable<void>;
+  abstract deleteOne(code: EAN13Barcode): Observable<void>;
 }

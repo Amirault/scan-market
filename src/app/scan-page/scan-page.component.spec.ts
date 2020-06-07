@@ -4,23 +4,23 @@ import { ScanInMemoryComponent } from '../scan/lib/scan-in-memory/scan-in-memory
 import { ReactiveFormsModule } from '@angular/forms';
 import { ScanComponent } from '../scan/scan.component';
 import { ScannedProduct } from '../core/scan/product.entity';
-import { EAN13Barcode } from '../core/scan/scan.entity';
+import { EAN13Barcode, parseToEAN13BarCode } from '../core/scan/scan.entity';
 import { ScanUseCases } from '../core/scan/scan.use-cases';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { CodeSource } from '../core/scan/code.source';
 import { ProductInMemorySource } from '../core/scan/adapters/product-in-memory.source';
 import { CodeInMemorySource } from '../core/scan/adapters/code-in-memory.source';
 import { ProductSource } from '../core/scan/product.source';
-import { RouterModule } from '@angular/router';
 import { ScannedProductsComponent } from '../scanned-products/scanned-products.component';
 
 function EAN13BarcodeFake(code: string = '3270190207924') {
-  return (code as unknown) as EAN13Barcode;
+  return parseToEAN13BarCode(code);
 }
 function productFake(
   props: Partial<{ code: EAN13Barcode; name: string; price: number }>
 ): ScannedProduct {
   return {
+    quantity: 0,
     code: EAN13BarcodeFake(),
     name: 'Eau',
     price: 0.75,
@@ -68,11 +68,6 @@ describe('ScanPageComponent', () => {
     code: EAN13BarcodeFake('3270190207924'),
     name: 'Eau',
     price: 0.75,
-  });
-  const productB = productFake({
-    code: EAN13BarcodeFake('3257971309114'),
-    name: 'Brioche',
-    price: 3,
   });
 
   describe('scanned product actions', () => {

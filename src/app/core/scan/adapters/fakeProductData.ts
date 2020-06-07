@@ -1,15 +1,15 @@
-import { EAN13Barcode } from '../scan.entity';
-import { ScannedProduct } from '../product.entity';
+import { parseToEAN13BarCode } from '../scan.entity';
+import { Product } from '../product.entity';
 
-export const productFakeData: ScannedProduct[] = [
+export const productFakeData: Product[] = [
   {
     name: 'Brioche Tranchée',
-    code: (3270190207924 as unknown) as EAN13Barcode,
+    code: parseToEAN13BarCode('3270190207924'),
     price: 0.75,
   },
   {
     name: 'Eau minérale naturelle',
-    code: (3257971309114 as unknown) as EAN13Barcode,
+    code: parseToEAN13BarCode('3257971309114'),
     price: 1.5,
   },
 ];

@@ -19,8 +19,9 @@ export class CodeInMemorySource implements CodeSource {
     return this.codesPipe.asObservable();
   }
 
-  delete(code: EAN13Barcode): Observable<void> {
-    this.codes = this.codes.filter((_) => _ !== code);
+  deleteOne(code: EAN13Barcode): Observable<void> {
+    const codeIndex = this.codes.findIndex((_) => _ === code);
+    this.codes = this.codes.filter((_, i) => i !== codeIndex);
     this.codesPipe.next(this.codes);
     return of(undefined);
   }

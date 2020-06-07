@@ -1,6 +1,6 @@
 <app-manually (code)="this.onScannedCode($event)"></app-manually>
 <div *ngIf="this.scannedProducts.length > 0">
-  <div class="list-group">
+  <div class="list-group list-group-flush">
     <div
       *ngFor="let scannedProduct of this.scannedProducts"
       class="list-group-item list-group-item-action"
@@ -9,19 +9,38 @@
         <h5 class="mb-1">
           {{ scannedProduct.name ? scannedProduct.name : "-" }}
         </h5>
-        <a
-          style="color: red"
-          [attr.data-testid]="'remove-action-' + scannedProduct.code"
-          (click)="this.onRemoveProduct(scannedProduct.code)"
-          type="button"
-        >
-          X
-        </a>
         <span class="text-muted">
           {{ scannedProduct.price !== undefined ? scannedProduct.price : "-" }}€
         </span>
       </div>
-      <small>{{ scannedProduct.code }}</small>
+      <div>
+        <small>
+          <span>{{ scannedProduct.code }}</span>
+        </small>
+      </div>
+      <p>
+        <span>
+          <a
+            [attr.data-testid]="'add-action-' + scannedProduct.code"
+            (click)="this.onAddProduct(scannedProduct.code)"
+            type="button"
+          >
+            Add
+          </a>
+        </span>
+        |
+        <span> Qty: {{ scannedProduct.quantity }} </span>
+        |
+        <span>
+          <a
+            [attr.data-testid]="'remove-action-' + scannedProduct.code"
+            (click)="this.onRemoveProduct(scannedProduct.code)"
+            type="button"
+          >
+            Remove
+          </a>
+        </span>
+      </p>
     </div>
     <a href="#" class="list-group-item list-group-item-action">
       <div class="d-flex w-100 justify-content-between">
