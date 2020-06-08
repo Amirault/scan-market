@@ -28,6 +28,32 @@ export class ScanUseCases {
     }
   }
 
+  saveProductCodeAndRefresh(
+    code: string,
+    scannedProducts: ScannedProduct[]
+  ): Observable<ScannedProduct[]> {
+    const EAN13BarCode = parseToEAN13BarCode(code);
+    if (EAN13BarCode) {
+      return this.codeSource.save(EAN13BarCode).pipe(
+        flatMap(() => this.productSource.product(EAN13BarCode)),
+        map((product) => {
+          const existingProduct = scannedProducts.find((_) => _.code === code);
+          const otherProducts = scannedProducts.filter((_) => _.code !== code);
+          if (existingProduct) {
+            return [
+              ...otherProducts,
+              { ...existingProduct, quantity: existingProduct.quantity + 1 },
+            ];
+          } else {
+            return [...otherProducts, { ...product, quantity: 1 }];
+          }
+        })
+      );
+    } else {
+      alert('Invalid ean 13 barcode !');
+    }
+  }
+
   scannedProducts(): Observable<ScannedProduct[]> {
     const codesWithOccurrence = this.codeSource
       .all()
@@ -49,8 +75,26 @@ export class ScanUseCases {
     );
   }
 
-  removeProduct(code: EAN13Barcode): Observable<void> {
-    return this.codeSource.deleteOne(code);
+  removeProduct(
+    code: EAN13Barcode,
+    scannedProducts: ScannedProduct[]
+  ): Observable<ScannedProduct[]> {
+    return this.codeSource.deleteOne(code).pipe(
+      map(() => {
+        const productRemoved = scannedProducts.find((_) => _.code === code);
+        const otherScannedProducts = scannedProducts.filter(
+          (_) => _.code !== code
+        );
+        if (productRemoved.quantity > 1) {
+          return [
+            ...otherScannedProducts,
+            { ...productRemoved, quantity: productRemoved.quantity - 1 },
+          ];
+        } else {
+          return otherScannedProducts;
+        }
+      })
+    );
   }
 
   productTotal(products: ScannedProduct[]): number {

@@ -22,15 +22,21 @@ export class ScannedProductsComponent implements OnInit {
   }
 
   onScannedCode(scannedCode: string) {
-    this.scanUseCases.saveProductCode(scannedCode).subscribe();
+    this.scanUseCases
+      .saveProductCodeAndRefresh(scannedCode, this.scannedProducts)
+      .subscribe((_) => (this.scannedProducts = _));
   }
 
   onRemoveProduct(productCode: EAN13Barcode) {
-    this.scanUseCases.removeProduct(productCode).subscribe();
+    this.scanUseCases
+      .removeProduct(productCode, this.scannedProducts)
+      .subscribe((_) => (this.scannedProducts = _));
   }
 
   onAddProduct(productCode: EAN13Barcode) {
-    this.scanUseCases.saveProductCode(productCode).subscribe();
+    this.scanUseCases
+      .saveProductCodeAndRefresh(productCode, this.scannedProducts)
+      .subscribe((_) => (this.scannedProducts = _));
   }
 
   productTotal() {

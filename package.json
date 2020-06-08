@@ -5,7 +5,7 @@
   "scripts": {
     "start-dev": "export SCAN_MODE=basic && yarn config:env && ng serve",
     "start-fake": "export SCAN_MODE=manual && yarn config:env && ng serve",
-    "start-prod": "yarn build-prod && yarn start",
+    "start-prod": "export PROD=true && yarn build-prod && yarn start",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
