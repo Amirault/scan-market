@@ -21,6 +21,7 @@ import { CodeSource } from './core/scan/code.source';
 import { CodeInMemorySource } from './core/scan/adapters/code-in-memory.source';
 import { MenuComponent } from './menu/menu.component';
 import { ProductInMemorySource } from './core/scan/adapters/product-in-memory.source';
+import { CodeLocalStorageSource } from './core/scan/adapters/code-local-storage.source';
 
 const routes = [
   { path: 'scanned-products', component: ScannedProductsComponent },
@@ -70,7 +71,9 @@ const engineLocation = 'assets/';
     ScanUseCases,
     {
       provide: CodeSource,
-      useValue: new CodeInMemorySource([]),
+      useValue: environment.production
+        ? new CodeLocalStorageSource()
+        : new CodeInMemorySource([]),
     },
   ],
   bootstrap: [AppComponent],
