@@ -24,11 +24,11 @@ import { ProductInMemorySource } from './core/scan/adapters/product-in-memory.so
 
 const routes = [
   { path: 'scanned-products', component: ScannedProductsComponent },
-  { path: '', component: ScannedProductsComponent },
   {
     path: 'scan',
     component: ScanPageComponent,
   },
+  { path: '', component: ScannedProductsComponent },
 ];
 
 const engineLocation = 'assets/';
@@ -48,7 +48,9 @@ const engineLocation = 'assets/';
   ],
   imports: [
     BrowserModule,
-    RouterModule.forRoot(routes),
+    RouterModule.forRoot(routes, {
+      onSameUrlNavigation: 'reload',
+    }),
     ScanditSdkModule.forRoot(environment.scanditKey, engineLocation),
     ReactiveFormsModule,
     NgxBarcode6Module,

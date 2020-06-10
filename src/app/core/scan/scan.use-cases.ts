@@ -50,7 +50,7 @@ export class ScanUseCases {
         })
       );
     } else {
-      alert('Invalid ean 13 barcode !');
+      alert('Unknown product code...');
     }
   }
 

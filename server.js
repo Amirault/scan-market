@@ -7,11 +7,6 @@ const __dirname = path.resolve();
 
 var app = express();
 app.use(bodyParser.json());
-// Create link to Angular build directory
-var distDir = __dirname + "/dist/";
-app.use(express.static(distDir));
-
-// CONTACTS API ROUTES BELOW
 
 // Generic error handler used by all endpoints.
 function handleError(res, reason, message, code) {
@@ -50,5 +45,15 @@ app.get("/info/:id", function(req, res) {
       res.status(200).json(data);
     });
 });
+
+var distDir = __dirname + "/dist/";
+app.use(express.static(distDir));
+
+app.get('*', (req, res) => {
+  res.sendFile(
+    path.resolve(__dirname, 'dist', 'index.html')
+  );
+});
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on ${port}`));
