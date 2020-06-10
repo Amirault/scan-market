@@ -13,8 +13,8 @@
     "prety": "prettier --write \"src/**/*.ts\"",
     "config:env": "ts-node set-env.mjs",
     "start": "node server.js",
-    "build-prod": "yarn config:env && ng build --output-path dist",
-    "postinstall": "yarn config:env && ng build --output-path dist"
+    "build-prod": "yarn config:env && ng build --prod --output-path dist",
+    "postinstall": "yarn config:env && ng build --prod --output-path dist"
   },
   "private": true,
   "dependencies": {
@@ -28,6 +28,7 @@
     "@angular/platform-browser": "~9.1.6",
     "@angular/platform-browser-dynamic": "~9.1.6",
     "@angular/router": "~9.1.6",
+    "@angular/service-worker": "~9.1.6",
     "body-parser": "^1.18.3",
     "bootstrap": "^4.5.0",
     "express": "^4.16.3",

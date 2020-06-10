@@ -22,6 +22,7 @@ import { CodeInMemorySource } from './core/scan/adapters/code-in-memory.source';
 import { MenuComponent } from './menu/menu.component';
 import { ProductInMemorySource } from './core/scan/adapters/product-in-memory.source';
 import { CodeLocalStorageSource } from './core/scan/adapters/code-local-storage.source';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 const routes = [
   { path: 'scanned-products', component: ScannedProductsComponent },
@@ -56,6 +57,9 @@ const engineLocation = 'assets/';
     ReactiveFormsModule,
     NgxBarcode6Module,
     HttpClientModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+    }),
   ],
   providers: [
     { provide: 'ENV', useValue: environment },
