@@ -8,13 +8,12 @@ const __dirname = path.resolve();
 var app = express();
 app.use(bodyParser.json());
 
-// Generic error handler used by all endpoints.
 function handleError(res, reason, message, code) {
   console.log("ERROR: " + reason);
   res.status(code || 500).json({ error: message });
 }
 
-app.get("/price/:id", function(req, res) {
+app.get("/api/price/:id", function(req, res) {
   const url = `https://www.carrefour.fr/s?q=${req.params.id}`;
   var username = "orangefire",
     apiKey = "dPR2PywxqDrHlb1lvN0UtuHq0",// DON'T CARE TAKE IT
@@ -38,7 +37,7 @@ app.get("/price/:id", function(req, res) {
   );
 });
 
-app.get("/info/:id", function(req, res) {
+app.get("/api/info/:id", function(req, res) {
   fetch(`https://world.openfoodfacts.org/api/v0/product/${req.params.id}}.json`)
     .then(response => response.json())
     .then(data => {

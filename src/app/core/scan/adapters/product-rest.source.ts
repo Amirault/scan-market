@@ -22,13 +22,13 @@ export class ProductRestSource implements ProductSource {
 
   private productInformation(code: EAN13Barcode) {
     return this.httpClient.get<{ product: { product_name: string } }>(
-      `/info/${code.toString()}`
+      `/api/info/${code.toString()}`
     );
   }
 
   private productPrice(code: EAN13Barcode): Observable<number | undefined> {
     return this.httpClient
-      .get(`/price/${code}`, {
+      .get(`/api/price/${code}`, {
         responseType: 'text',
       })
       .pipe(
