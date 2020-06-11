@@ -1,0 +1,109 @@
+{
+  "configVersion": 1,
+  "timestamp": 1591878014770,
+  "index": "/scan-market/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "urls": [
+        "/scan-market/favicon.ico",
+        "/scan-market/index.html",
+        "/scan-market/main-es2015.0c9838c38dabc23664a8.js",
+        "/scan-market/main-es5.0c9838c38dabc23664a8.js",
+        "/scan-market/manifest.webmanifest",
+        "/scan-market/polyfills-es2015.690002c25ea8557bb4b0.js",
+        "/scan-market/polyfills-es5.4da951a34919c71abe40.js",
+        "/scan-market/runtime-es2015.1eba213af0b233498d9d.js",
+        "/scan-market/runtime-es5.1eba213af0b233498d9d.js",
+        "/scan-market/styles.485c2b25d9424c376d2d.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "urls": [
+        "/scan-market/assets/barcode-24.png",
+        "/scan-market/assets/icons/icon-128x128.png",
+        "/scan-market/assets/icons/icon-144x144.png",
+        "/scan-market/assets/icons/icon-152x152.png",
+        "/scan-market/assets/icons/icon-192x192.png",
+        "/scan-market/assets/icons/icon-384x384.png",
+        "/scan-market/assets/icons/icon-512x512.png",
+        "/scan-market/assets/icons/icon-72x72.png",
+        "/scan-market/assets/icons/icon-96x96.png",
+        "/scan-market/assets/scandit-engine-sdk.min.js",
+        "/scan-market/assets/scandit-engine-sdk.wasm",
+        "/scan-market/assets/shopping-cart.svg"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "api-info",
+      "patterns": [
+        "\\/api\\/info\\/.*"
+      ],
+      "strategy": "performance",
+      "maxSize": 100,
+      "maxAge": 31536000000,
+      "version": 1
+    },
+    {
+      "name": "api-price",
+      "patterns": [
+        "\\/api\\/price\\/.*"
+      ],
+      "strategy": "freshness",
+      "maxSize": 100,
+      "maxAge": 31536000000,
+      "version": 1
+    }
+  ],
+  "hashTable": {
+    "/scan-market/assets/barcode-24.png": "dacc90a04cac5e52966516226bb47af7ca6b43c0",
+    "/scan-market/assets/icons/icon-128x128.png": "dae3b6ed49bdaf4327b92531d4b5b4a5d30c7532",
+    "/scan-market/assets/icons/icon-144x144.png": "b0bd89982e08f9bd2b642928f5391915b74799a7",
+    "/scan-market/assets/icons/icon-152x152.png": "7479a9477815dfd9668d60f8b3b2fba709b91310",
+    "/scan-market/assets/icons/icon-192x192.png": "1abd80d431a237a853ce38147d8c63752f10933b",
+    "/scan-market/assets/icons/icon-384x384.png": "329749cd6393768d3131ed6304c136b1ca05f2fd",
+    "/scan-market/assets/icons/icon-512x512.png": "559d9c4318b45a1f2b10596bbb4c960fe521dbcc",
+    "/scan-market/assets/icons/icon-72x72.png": "c457e56089a36952cd67156f9996bc4ce54a5ed9",
+    "/scan-market/assets/icons/icon-96x96.png": "3914125a4b445bf111c5627875fc190f560daa41",
+    "/scan-market/assets/scandit-engine-sdk.min.js": "2d5cbff7fdeaad35776e5b7e70dda9dd658bcb15",
+    "/scan-market/assets/scandit-engine-sdk.wasm": "33064ce442ac85d15aefb732f404170d428d38d1",
+    "/scan-market/assets/shopping-cart.svg": "9af276133bc2b3e15676dccb610950a938cee134",
+    "/scan-market/favicon.ico": "22f6a4a3bcaafafb0254e0f2fa4ceb89e505e8b2",
+    "/scan-market/index.html": "7805dd0f91af3fc38442982d992fa36ffd88ddc3",
+    "/scan-market/main-es2015.0c9838c38dabc23664a8.js": "b2f1e833f09d13eb5ab91917c6555b2e8cefdb95",
+    "/scan-market/main-es5.0c9838c38dabc23664a8.js": "eff60e07fbc91d358a1f065d0549af04204c1d3b",
+    "/scan-market/manifest.webmanifest": "9ff9947b2e9a26e85e0fb588ff503c723e98bc19",
+    "/scan-market/polyfills-es2015.690002c25ea8557bb4b0.js": "72ad4ccc0a3916ae4598199447cdeadd6d380570",
+    "/scan-market/polyfills-es5.4da951a34919c71abe40.js": "0aee34bd067d5a6a0a61ef2245421f87998eda1b",
+    "/scan-market/runtime-es2015.1eba213af0b233498d9d.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",
+    "/scan-market/runtime-es5.1eba213af0b233498d9d.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",
+    "/scan-market/styles.485c2b25d9424c376d2d.css": "f48c4ce4cdcdf887413a1845c4cd71bd6c57f2f5"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ]
+}
