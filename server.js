@@ -38,17 +38,15 @@ app.get("/api/price/:id", function(req, res) {
 });
 
 app.get("/api/info/:id", function(req, res) {
-  res.status(200).json({ product: { product_name: 'test' } })
+  fetch(`https://world.openfoodfacts.org/api/v0/product/${req.params.id}}.json`)
+    .then(response => response.json())
+    .then(data => {
+      res.status(200).json(data);
+    });
 });
 
 var distDir = __dirname + "/dist/";
 app.use(express.static(distDir));
-
-app.get('/ngsw-worker.js', (req, res) => {
-  res.sendFile(
-    path.resolve(__dirname, 'dist', 'ngsw-worker.js')
-  );
-});
 
 app.get('*', (req, res) => {
   res.sendFile(
