@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1591982958698,
+  "timestamp": 1591983577261,
   "index": "/scan-market/index.html",
   "assetGroups": [
     {
@@ -136,7 +136,7 @@
     "/scan-market/assets/scandit-engine-sdk.wasm": "33064ce442ac85d15aefb732f404170d428d38d1",
     "/scan-market/assets/shopping-cart.svg": "9af276133bc2b3e15676dccb610950a938cee134",
     "/scan-market/favicon.ico": "54335a7ce0a850b9c84393bf9e9cd4e0e06a8b0e",
-    "/scan-market/index.html": "3faf10a6a6876602443faaea97d17d0f2c7b75e4",
+    "/scan-market/index.html": "e3bd331b86effb4c2ff75fffbabb204ebb1cc9b0",
     "/scan-market/main-es2015.0c9838c38dabc23664a8.js": "b2f1e833f09d13eb5ab91917c6555b2e8cefdb95",
     "/scan-market/main-es5.0c9838c38dabc23664a8.js": "eff60e07fbc91d358a1f065d0549af04204c1d3b",
     "/scan-market/manifest.webmanifest": "2bc8809f8483c640b0eb08e365a88b3b845ac280",
