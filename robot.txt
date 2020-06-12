@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /scan
+Disallow: /scanned-products
+Disallow: /api/*
