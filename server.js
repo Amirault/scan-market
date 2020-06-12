@@ -3,10 +3,11 @@ import bodyParser from "body-parser";
 import fetch from "node-fetch";
 import request from "request";
 import path from 'path';
+import compression from 'compression';
 const __dirname = path.resolve();
 
 var app = express();
-app.use(bodyParser.json());
+app.use(bodyParser.json()).use(compression());
 
 function handleError(res, reason, message, code) {
   console.log("ERROR: " + reason);
