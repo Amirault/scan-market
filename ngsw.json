@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1591902553576,
+  "timestamp": 1591982116971,
   "index": "/scan-market/index.html",
   "assetGroups": [
     {
@@ -139,7 +139,7 @@
     "/scan-market/index.html": "3faf10a6a6876602443faaea97d17d0f2c7b75e4",
     "/scan-market/main-es2015.0c9838c38dabc23664a8.js": "b2f1e833f09d13eb5ab91917c6555b2e8cefdb95",
     "/scan-market/main-es5.0c9838c38dabc23664a8.js": "eff60e07fbc91d358a1f065d0549af04204c1d3b",
-    "/scan-market/manifest.webmanifest": "9ff9947b2e9a26e85e0fb588ff503c723e98bc19",
+    "/scan-market/manifest.webmanifest": "2bc8809f8483c640b0eb08e365a88b3b845ac280",
     "/scan-market/polyfills-es2015.690002c25ea8557bb4b0.js": "72ad4ccc0a3916ae4598199447cdeadd6d380570",
     "/scan-market/polyfills-es5.4da951a34919c71abe40.js": "0aee34bd067d5a6a0a61ef2245421f87998eda1b",
     "/scan-market/runtime-es2015.1eba213af0b233498d9d.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",
