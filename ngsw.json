@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1592079284574,
+  "timestamp": 1592079385193,
   "index": "/scan-market/index.html",
   "assetGroups": [
     {
@@ -90,7 +90,7 @@
     "/scan-market/assets/splashscreens/iphonexr_splash.png": "dbb16767fd645ea3868da7ff5acd7ba0b16b07a7",
     "/scan-market/assets/splashscreens/iphonexsmax_splash.png": "605505db57597c0c3bbdba989a458c221dadbe25",
     "/scan-market/favicon.ico": "84a82e037369702a328524836d7e9ef2d5962122",
-    "/scan-market/index.html": "fb709d9fc6d16b1e6530d1b8c34a2cf84ad9b74c",
+    "/scan-market/index.html": "8c090eedf3f063f5482c4da9dd9dca86394be69b",
     "/scan-market/main-es2015.0c9838c38dabc23664a8.js": "b2f1e833f09d13eb5ab91917c6555b2e8cefdb95",
     "/scan-market/main-es5.0c9838c38dabc23664a8.js": "eff60e07fbc91d358a1f065d0549af04204c1d3b",
     "/scan-market/manifest.webmanifest": "143c9f22f2a2c31984e616f95ea52b28d027c216",
