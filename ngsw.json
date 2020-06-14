@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1592135729412,
+  "timestamp": 1592168774450,
   "index": "/scan-market/index.html",
   "assetGroups": [
     {
@@ -10,8 +10,8 @@
       "urls": [
         "/scan-market/favicon.ico",
         "/scan-market/index.html",
-        "/scan-market/main-es2015.35288ea54899db72d1bc.js",
-        "/scan-market/main-es5.35288ea54899db72d1bc.js",
+        "/scan-market/main-es2015.332bc09d44714d169ac7.js",
+        "/scan-market/main-es5.332bc09d44714d169ac7.js",
         "/scan-market/manifest.webmanifest",
         "/scan-market/polyfills-es2015.690002c25ea8557bb4b0.js",
         "/scan-market/polyfills-es5.4da951a34919c71abe40.js",
@@ -90,9 +90,9 @@
     "/scan-market/assets/splashscreens/iphonexr_splash.png": "dbb16767fd645ea3868da7ff5acd7ba0b16b07a7",
     "/scan-market/assets/splashscreens/iphonexsmax_splash.png": "605505db57597c0c3bbdba989a458c221dadbe25",
     "/scan-market/favicon.ico": "84a82e037369702a328524836d7e9ef2d5962122",
-    "/scan-market/index.html": "afc5da004b9a4f9b2f688418725007325835ccfd",
-    "/scan-market/main-es2015.35288ea54899db72d1bc.js": "de204fb76019a1b1620a9b090970a257a492f067",
-    "/scan-market/main-es5.35288ea54899db72d1bc.js": "0057b6779759bbff60df3fed70cde7cdf2947f42",
+    "/scan-market/index.html": "d7c594987b9a90ba19c91f3ed8a4240f2e8b269b",
+    "/scan-market/main-es2015.332bc09d44714d169ac7.js": "a42b0901f0c017bf4de99080892b48d9080c7da5",
+    "/scan-market/main-es5.332bc09d44714d169ac7.js": "bfadc8ddab07ca97db69a2ca8dcd38303bd4e3f5",
     "/scan-market/manifest.webmanifest": "143c9f22f2a2c31984e616f95ea52b28d027c216",
     "/scan-market/polyfills-es2015.690002c25ea8557bb4b0.js": "72ad4ccc0a3916ae4598199447cdeadd6d380570",
     "/scan-market/polyfills-es5.4da951a34919c71abe40.js": "0aee34bd067d5a6a0a61ef2245421f87998eda1b",
