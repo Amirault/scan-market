@@ -4,7 +4,7 @@ import { EAN13Barcode, parseToEAN13BarCode } from './scan.entity';
 import { ProductSource } from './product.source';
 import { forkJoin, Observable, of } from 'rxjs';
 import { flatMap, map } from 'rxjs/operators';
-import { ScannedProduct } from './product.entity';
+import { Product, ScannedProduct } from './product.entity';
 
 function toCodesWithOccurrence(c: EAN13Barcode[]): Map<EAN13Barcode, number> {
   return c.reduce((acc, c) => {
@@ -34,18 +34,26 @@ export class ScanUseCases {
   ): Observable<ScannedProduct[]> {
     const EAN13BarCode = parseToEAN13BarCode(code);
     if (EAN13BarCode) {
+      const existingProductIndex = scannedProducts.findIndex(
+        (_) => _.code === EAN13BarCode
+      );
       return this.codeSource.save(EAN13BarCode).pipe(
-        flatMap(() => this.productSource.product(EAN13BarCode)),
-        map((product) => {
-          const existingProduct = scannedProducts.find((_) => _.code === code);
-          const otherProducts = scannedProducts.filter((_) => _.code !== code);
-          if (existingProduct) {
-            return [
-              ...otherProducts,
-              { ...existingProduct, quantity: existingProduct.quantity + 1 },
-            ];
+        flatMap(() => {
+          return existingProductIndex === -1
+            ? this.productSource.product(EAN13BarCode)
+            : of(undefined);
+        }),
+        map((product: Product | undefined) => {
+          if (product) {
+            return [...scannedProducts, { ...product, quantity: 1 }];
           } else {
-            return [...otherProducts, { ...product, quantity: 1 }];
+            const p = scannedProducts[existingProductIndex];
+            const newScannedProducts = [...scannedProducts];
+            newScannedProducts[existingProductIndex] = {
+              ...p,
+              quantity: p.quantity + 1,
+            };
+            return newScannedProducts;
           }
         })
       );
