@@ -1,11 +1,16 @@
-<div *ngIf="this.isAccurate()">
-  <app-scandit (code)="this.onCodeAvailable($event)"></app-scandit>
+<div *ngIf="isCameraAvailable">
+  <div *ngIf="this.isAccurate()">
+    <app-scandit (code)="this.onCodeAvailable($event)"></app-scandit>
+  </div>
+  <div *ngIf="this.isBasic()">
+    <app-scan-quagga (code)="this.onCodeAvailable($event)"></app-scan-quagga>
+  </div>
+  <div *ngIf="this.isManual()">
+    <app-scan-in-memory
+      (code)="this.onCodeAvailable($event)"
+    ></app-scan-in-memory>
+  </div>
 </div>
-<div *ngIf="this.isBasic()">
-  <app-scan-quagga (code)="this.onCodeAvailable($event)"></app-scan-quagga>
-</div>
-<div *ngIf="this.isManual()">
-  <app-scan-in-memory
-    (code)="this.onCodeAvailable($event)"
-  ></app-scan-in-memory>
+<div *ngIf="!isCameraAvailable">
+  No camera found...
 </div>

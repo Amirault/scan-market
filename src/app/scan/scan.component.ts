@@ -12,9 +12,19 @@ export class ScanComponent implements OnInit {
   @Output()
   scannedCode = new EventEmitter<string>();
 
-  constructor() {}
+  isCameraAvailable: boolean;
 
-  ngOnInit(): void {}
+  constructor() {
+    this.isCameraAvailable = false;
+  }
+
+  ngOnInit(): void {
+    navigator.mediaDevices.enumerateDevices().then((devices) => {
+      this.isCameraAvailable = devices.some(
+        (device) => 'videoinput' === device.kind
+      );
+    });
+  }
 
   onCodeAvailable(scannedCode: string) {
     this.scannedCode.emit(scannedCode);
