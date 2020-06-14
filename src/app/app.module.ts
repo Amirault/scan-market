@@ -23,9 +23,12 @@ import { MenuComponent } from './menu/menu.component';
 import { ProductInMemorySource } from './core/scan/adapters/product-in-memory.source';
 import { CodeLocalStorageSource } from './core/scan/adapters/code-local-storage.source';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { BarcodeComponent } from './barcode/barcode.component';
+import { BarcodePageComponent } from './barcode-page/barcode-page.component';
 
 const routes = [
   { path: 'scanned-products', component: ScannedProductsComponent },
+  { path: 'barcode/:code', component: BarcodePageComponent },
   {
     path: 'scan',
     component: ScanPageComponent,
@@ -47,6 +50,8 @@ const engineLocation = 'assets/';
     ScannedProductsComponent,
     ScanManuallyComponent,
     MenuComponent,
+    BarcodeComponent,
+    BarcodePageComponent,
   ],
   imports: [
     BrowserModule,

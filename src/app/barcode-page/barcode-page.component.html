@@ -1,0 +1,4 @@
+<div><a routerLink="/scanned-products"><- scanned products</a></div>
+<div *ngIf="this.code" style="height: 100%">
+  <app-barcode [code]="this.code.toString()"></app-barcode>
+</div>

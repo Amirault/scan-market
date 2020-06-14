@@ -18,29 +18,34 @@
           <span>{{ scannedProduct.code }}</span>
         </small>
       </div>
-      <p>
-        <span>
-          <a
-            [attr.data-testid]="'add-action-' + scannedProduct.code"
-            (click)="this.onAddProduct(scannedProduct.code)"
-            type="button"
-          >
-            Add
-          </a>
-        </span>
-        |
-        <span> Qty: {{ scannedProduct.quantity }} </span>
-        |
-        <span>
-          <a
-            [attr.data-testid]="'remove-action-' + scannedProduct.code"
-            (click)="this.onRemoveProduct(scannedProduct.code)"
-            type="button"
-          >
-            Remove
-          </a>
-        </span>
-      </p>
+      <div class="d-flex w-100 justify-content-between">
+        <p>
+          <span>
+            <a
+              [attr.data-testid]="'add-action-' + scannedProduct.code"
+              (click)="this.onAddProduct(scannedProduct.code)"
+              type="button"
+            >
+              Add
+            </a>
+          </span>
+          |
+          <span> Qty: {{ scannedProduct.quantity }} </span>
+          |
+          <span>
+            <a
+              [attr.data-testid]="'remove-action-' + scannedProduct.code"
+              (click)="this.onRemoveProduct(scannedProduct.code)"
+              type="button"
+            >
+              Remove
+            </a>
+          </span>
+        </p>
+        <p>
+          <a [routerLink]="['/barcode', scannedProduct.code]">Show Barcode</a>
+        </p>
+      </div>
     </div>
     <a href="#" class="list-group-item list-group-item-action">
       <div class="d-flex w-100 justify-content-between">
