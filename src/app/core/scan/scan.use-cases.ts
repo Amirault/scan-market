@@ -89,16 +89,21 @@ export class ScanUseCases {
   ): Observable<ScannedProduct[]> {
     return this.codeSource.deleteOne(code).pipe(
       map(() => {
-        const productRemoved = scannedProducts.find((_) => _.code === code);
-        const otherScannedProducts = scannedProducts.filter(
-          (_) => _.code !== code
+        const productRemovedIndex = scannedProducts.findIndex(
+          (_) => _.code === code
         );
-        if (productRemoved.quantity > 1) {
-          return [
-            ...otherScannedProducts,
-            { ...productRemoved, quantity: productRemoved.quantity - 1 },
-          ];
+        if (productRemovedIndex) {
+          const p = scannedProducts[productRemovedIndex];
+          const newScannedProducts = [...scannedProducts];
+          newScannedProducts[productRemovedIndex] = {
+            ...p,
+            quantity: p.quantity - 1,
+          };
+          return newScannedProducts;
         } else {
+          const otherScannedProducts = scannedProducts.filter(
+            (_) => _.code !== code
+          );
           return otherScannedProducts;
         }
       })
