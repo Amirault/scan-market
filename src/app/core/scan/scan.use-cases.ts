@@ -101,10 +101,7 @@ export class ScanUseCases {
           };
           return newScannedProducts;
         } else {
-          const otherScannedProducts = scannedProducts.filter(
-            (_) => _.code !== code
-          );
-          return otherScannedProducts;
+          return scannedProducts.filter((_) => _.code !== code);
         }
       })
     );
