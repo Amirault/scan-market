@@ -25,7 +25,6 @@ import { PurchaseLocalStorageSource } from './core/scan/adapters/purchase-local-
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { BarcodeComponent } from './barcode/barcode.component';
 import { BarcodePageComponent } from './barcode-page/barcode-page.component';
-import { ScannedProductItemComponent } from './scanned-product-item/scanned-product-item.component';
 
 const routes = [
   { path: 'scanned-products', component: ScannedProductsComponent },
@@ -53,7 +52,6 @@ const engineLocation = 'assets/';
     MenuComponent,
     BarcodeComponent,
     BarcodePageComponent,
-    ScannedProductItemComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,5 +1,5 @@
 export const environment = {
   production: undefined,
-  scanMode: 'manual',
+  scanMode: 'undefined',
   scanditKey: 'undefined',
 };
