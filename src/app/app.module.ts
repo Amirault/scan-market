@@ -17,14 +17,15 @@ import { ProductRestSource } from './core/scan/adapters/product-rest.source';
 import { ScannedProductsComponent } from './scanned-products/scanned-products.component';
 import { ScanManuallyComponent } from './scanned-products/scan-manually/scan-manually.component';
 import { ScanUseCases } from './core/scan/scan.use-cases';
-import { CodeSource } from './core/scan/code.source';
-import { CodeInMemorySource } from './core/scan/adapters/code-in-memory.source';
+import { PurchaseSource } from './core/scan/purchaseSource';
+import { PurchaseInMemorySource } from './core/scan/adapters/purchase-in-memory.source';
 import { MenuComponent } from './menu/menu.component';
 import { ProductInMemorySource } from './core/scan/adapters/product-in-memory.source';
-import { CodeLocalStorageSource } from './core/scan/adapters/code-local-storage.source';
+import { PurchaseLocalStorageSource } from './core/scan/adapters/purchase-local-storage.source';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { BarcodeComponent } from './barcode/barcode.component';
 import { BarcodePageComponent } from './barcode-page/barcode-page.component';
+import { ScannedProductItemComponent } from './scanned-product-item/scanned-product-item.component';
 
 const routes = [
   { path: 'scanned-products', component: ScannedProductsComponent },
@@ -52,6 +53,7 @@ const engineLocation = 'assets/';
     MenuComponent,
     BarcodeComponent,
     BarcodePageComponent,
+    ScannedProductItemComponent,
   ],
   imports: [
     BrowserModule,
@@ -79,10 +81,10 @@ const engineLocation = 'assets/';
     },
     ScanUseCases,
     {
-      provide: CodeSource,
+      provide: PurchaseSource,
       useValue: environment.production
-        ? new CodeLocalStorageSource()
-        : new CodeInMemorySource([]),
+        ? new PurchaseLocalStorageSource()
+        : new PurchaseInMemorySource([]),
     },
   ],
   bootstrap: [AppComponent],

@@ -18,7 +18,7 @@ export class ScanPageComponent implements OnInit {
   ngOnInit(): void {}
 
   onScannedCode(scannedCode: string) {
-    this.scanUseCases.saveProductCode(scannedCode).subscribe(async () => {
+    this.scanUseCases.scanPurchase(scannedCode).subscribe(async () => {
       await this.router.navigate(['/scanned-products']);
     });
   }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EAN13Barcode } from '../core/scan/scan.entity';
-import { ScannedProduct } from '../core/scan/product.entity';
+import { ProductPurchase } from '../core/scan/product.entity';
 import { ScanUseCases } from '../core/scan/scan.use-cases';
 
 @Component({
@@ -9,7 +9,7 @@ import { ScanUseCases } from '../core/scan/scan.use-cases';
   styleUrls: ['./scanned-products.component.scss'],
 })
 export class ScannedProductsComponent implements OnInit {
-  scannedProducts: ScannedProduct[];
+  scannedProducts: ProductPurchase[];
 
   constructor(public scanUseCases: ScanUseCases) {
     this.scannedProducts = [];
@@ -17,25 +17,25 @@ export class ScannedProductsComponent implements OnInit {
 
   ngOnInit(): void {
     this.scanUseCases
-      .scannedProducts()
+      .readAllProductsPurchase()
       .subscribe((_) => (this.scannedProducts = _));
   }
 
   onScannedCode(scannedCode: string) {
     this.scanUseCases
-      .saveProductCodeAndRefresh(scannedCode, this.scannedProducts)
+      .addPurchaseAndRefresh(scannedCode, this.scannedProducts)
       .subscribe((_) => (this.scannedProducts = _));
   }
 
   onRemoveProduct(productCode: EAN13Barcode) {
     this.scanUseCases
-      .removeProduct(productCode, this.scannedProducts)
+      .decreaseQuantityAndRefresh(productCode, this.scannedProducts)
       .subscribe((_) => (this.scannedProducts = _));
   }
 
   onAddProduct(productCode: EAN13Barcode) {
     this.scanUseCases
-      .saveProductCodeAndRefresh(productCode, this.scannedProducts)
+      .increaseQuantityAndRefresh(productCode, this.scannedProducts)
       .subscribe((_) => (this.scannedProducts = _));
   }
 

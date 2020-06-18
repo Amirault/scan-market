@@ -1,59 +1,45 @@
 import { Injectable } from '@angular/core';
-import { CodeSource } from './code.source';
+import { PurchaseSource } from './purchaseSource';
 import { EAN13Barcode, parseToEAN13BarCode } from './scan.entity';
 import { ProductSource } from './product.source';
 import { forkJoin, Observable, of } from 'rxjs';
 import { flatMap, map } from 'rxjs/operators';
-import { Product, ScannedProduct } from './product.entity';
-
-function toCodesWithOccurrence(c: EAN13Barcode[]): Map<EAN13Barcode, number> {
-  return c.reduce((acc, c) => {
-    return acc.set(c, acc.has(c) ? acc.get(c) + 1 : 1);
-  }, new Map<EAN13Barcode, number>());
-}
+import { ProductPurchase, Purchase } from './product.entity';
 
 @Injectable()
 export class ScanUseCases {
   constructor(
-    private readonly codeSource: CodeSource,
+    private readonly purchaseSource: PurchaseSource,
     private readonly productSource: ProductSource
   ) {}
 
-  saveProductCode(code: string): Observable<void> {
+  public scanPurchase(code: string): Observable<void> {
     const EAN13BarCode = parseToEAN13BarCode(code);
     if (EAN13BarCode) {
-      return this.codeSource.save(EAN13BarCode);
+      return this.addPurchase(EAN13BarCode).pipe(map(() => {}));
     } else {
       alert('Invalid ean 13 barcode !');
     }
   }
 
-  saveProductCodeAndRefresh(
+  public addPurchaseAndRefresh(
     code: string,
-    scannedProducts: ScannedProduct[]
-  ): Observable<ScannedProduct[]> {
+    displayedProductPurchase: ProductPurchase[]
+  ): Observable<ProductPurchase[]> {
     const EAN13BarCode = parseToEAN13BarCode(code);
     if (EAN13BarCode) {
-      const existingProductIndex = scannedProducts.findIndex(
-        (_) => _.code === EAN13BarCode
-      );
-      return this.codeSource.save(EAN13BarCode).pipe(
-        flatMap(() => {
-          return existingProductIndex === -1
-            ? this.productSource.product(EAN13BarCode)
-            : of(undefined);
-        }),
-        map((product: Product | undefined) => {
-          if (product) {
-            return [...scannedProducts, { ...product, quantity: 1 }];
+      return this.addPurchase(EAN13BarCode).pipe(
+        flatMap((_) => this.readProductPurchase(_)),
+        map((productPurchase) => {
+          const existingProductPurchase = displayedProductPurchase.findIndex(
+            (_) => _.code === productPurchase.code
+          );
+          if (existingProductPurchase === -1) {
+            return [...displayedProductPurchase, productPurchase];
           } else {
-            const p = scannedProducts[existingProductIndex];
-            const newScannedProducts = [...scannedProducts];
-            newScannedProducts[existingProductIndex] = {
-              ...p,
-              quantity: p.quantity + 1,
-            };
-            return newScannedProducts;
+            const news = [...displayedProductPurchase];
+            news[existingProductPurchase] = productPurchase;
+            return news;
           }
         })
       );
@@ -62,52 +48,87 @@ export class ScanUseCases {
     }
   }
 
-  scannedProducts(): Observable<ScannedProduct[]> {
-    const codesWithOccurrence = this.codeSource
-      .all()
-      .pipe(map(toCodesWithOccurrence));
-    return codesWithOccurrence.pipe(
-      flatMap((codes) => {
-        return codes.size > 0
-          ? forkJoin(
-              Array.from(codes.keys()).map((code) => {
-                return this.productSource.product(code).pipe(
-                  map((_) => {
-                    return { quantity: codes.get(code), ..._ };
-                  })
-                );
-              })
-            )
+  public increaseQuantityAndRefresh(
+    code: EAN13Barcode,
+    displayedProductPurchase: ProductPurchase[]
+  ): Observable<ProductPurchase[]> {
+    return this.purchaseSource.read(code).pipe(
+      flatMap((_) => this.increasePurchaseQuantity(_)),
+      map((purchase) => {
+        return displayedProductPurchase.map((_) => {
+          return _.code === code ? { ..._, ...purchase } : _;
+        });
+      })
+    );
+  }
+
+  public decreaseQuantityAndRefresh(
+    code: EAN13Barcode,
+    displayedProductPurchase: ProductPurchase[]
+  ): Observable<ProductPurchase[]> {
+    return this.purchaseSource.read(code).pipe(
+      flatMap((_) => this.decreasePurchaseQuantity(_)),
+      map((purchase) => {
+        return displayedProductPurchase
+          .map((_) => {
+            return _.code === purchase.code ? { ..._, ...purchase } : _;
+          })
+          .filter((_) => _.quantity > 0);
+      })
+    );
+  }
+
+  public readAllProductsPurchase(): Observable<ProductPurchase[]> {
+    return this.purchaseSource.all().pipe(
+      map((purchases) => purchases.filter((_) => _.quantity > 0)),
+      flatMap((purchases) => {
+        return purchases.length > 0
+          ? forkJoin(purchases.map((_) => this.readProductPurchase(_)))
           : of([]);
       })
     );
   }
 
-  removeProduct(
-    code: EAN13Barcode,
-    scannedProducts: ScannedProduct[]
-  ): Observable<ScannedProduct[]> {
-    return this.codeSource.deleteOne(code).pipe(
-      map(() => {
-        const productRemovedIndex = scannedProducts.findIndex(
-          (_) => _.code === code
-        );
-        if (productRemovedIndex) {
-          const p = scannedProducts[productRemovedIndex];
-          const newScannedProducts = [...scannedProducts];
-          newScannedProducts[productRemovedIndex] = {
-            ...p,
-            quantity: p.quantity - 1,
-          };
-          return newScannedProducts;
+  public productTotal(products: ProductPurchase[]): number {
+    return products.reduce((acc, c) => acc + (c.price ?? 0) * c.quantity, 0);
+  }
+
+  private addPurchase(EAN13BarCode: EAN13Barcode) {
+    return this.purchaseSource.read(EAN13BarCode).pipe(
+      flatMap((existingPurchase) => {
+        if (existingPurchase) {
+          return this.increasePurchaseQuantity(existingPurchase);
         } else {
-          return scannedProducts.filter((_) => _.code !== code);
+          return this.purchaseSource.create({
+            code: EAN13BarCode,
+            quantity: 1,
+          });
         }
       })
     );
   }
 
-  productTotal(products: ScannedProduct[]): number {
-    return products.reduce((acc, c) => acc + (c.price ?? 0) * c.quantity, 0);
+  private readProductPurchase(purchase: Purchase) {
+    return this.productSource.product(purchase.code).pipe(
+      map((product) => {
+        return { ...product, ...purchase };
+      })
+    );
+  }
+
+  private increasePurchaseQuantity(purchase: Purchase) {
+    const updatedPurchase = {
+      code: purchase.code,
+      quantity: purchase.quantity + 1,
+    };
+    return this.purchaseSource.update(updatedPurchase);
+  }
+
+  private decreasePurchaseQuantity(purchase) {
+    const updatedPurchase = {
+      code: purchase.code,
+      quantity: purchase.quantity > 0 ? purchase.quantity - 1 : 0,
+    };
+    return this.purchaseSource.update(updatedPurchase);
   }
 }

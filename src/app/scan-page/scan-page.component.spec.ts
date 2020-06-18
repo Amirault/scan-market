@@ -3,13 +3,13 @@ import { fireEvent, render, screen } from '@testing-library/angular';
 import { ScanInMemoryComponent } from '../scan/lib/scan-in-memory/scan-in-memory.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ScanComponent } from '../scan/scan.component';
-import { ScannedProduct } from '../core/scan/product.entity';
+import { ProductPurchase } from '../core/scan/product.entity';
 import { EAN13Barcode, parseToEAN13BarCode } from '../core/scan/scan.entity';
 import { ScanUseCases } from '../core/scan/scan.use-cases';
 import { fakeAsync, TestBed } from '@angular/core/testing';
-import { CodeSource } from '../core/scan/code.source';
+import { PurchaseSource } from '../core/scan/purchaseSource';
 import { ProductInMemorySource } from '../core/scan/adapters/product-in-memory.source';
-import { CodeInMemorySource } from '../core/scan/adapters/code-in-memory.source';
+import { PurchaseInMemorySource } from '../core/scan/adapters/purchase-in-memory.source';
 import { ProductSource } from '../core/scan/product.source';
 import { ScannedProductsComponent } from '../scanned-products/scanned-products.component';
 
@@ -18,7 +18,7 @@ function EAN13BarcodeFake(code: string = '3270190207924') {
 }
 function productFake(
   props: Partial<{ code: EAN13Barcode; name: string; price: number }>
-): ScannedProduct {
+): ProductPurchase {
   return {
     quantity: 0,
     code: EAN13BarcodeFake(),
@@ -32,7 +32,7 @@ function scanPageOptions(
   {
     scanMode = 'manual',
   }: {
-    products?: ScannedProduct[];
+    products?: ProductPurchase[];
     scanMode?: 'manual' | 'basic' | 'accurate';
   } = { products: [], scanMode: 'manual' }
 ) {
@@ -42,8 +42,8 @@ function scanPageOptions(
     providers: [
       ScanUseCases,
       {
-        provide: CodeSource,
-        useValue: new CodeInMemorySource(),
+        provide: PurchaseSource,
+        useValue: new PurchaseInMemorySource(),
       },
       {
         provide: ProductSource,
@@ -73,10 +73,7 @@ describe('ScanPageComponent', () => {
   describe('scanned product actions', () => {
     it('should save the scanned product', fakeAsync(async () => {
       // GIVEN
-      const scanPage = await render(
-        ScanPageComponent,
-        scanPageOptions({ products: [] })
-      );
+      const scanPage = await render(ScanPageComponent, scanPageOptions());
       const scanUseCases = TestBed.inject(ScanUseCases);
       // WHEN
       await scanPage.type(
@@ -86,7 +83,7 @@ describe('ScanPageComponent', () => {
       fireEvent.click(screen.getByText('+'));
       // THEN
       await scanUseCases
-        .scannedProducts()
+        .readAllProductsPurchase()
         .subscribe((products) => expect(products.length === 1).toBeTrue());
     }));
   });

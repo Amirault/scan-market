@@ -1,14 +1,14 @@
 import { fireEvent, render, screen } from '@testing-library/angular';
 import { ReactiveFormsModule } from '@angular/forms';
 import { EAN13Barcode } from '../core/scan/scan.entity';
-import { Product } from '../core/scan/product.entity';
+import { Product, Purchase } from '../core/scan/product.entity';
 import { ScannedProductsComponent } from './scanned-products.component';
 import { ScanManuallyComponent } from './scan-manually/scan-manually.component';
 import { ScanUseCases } from '../core/scan/scan.use-cases';
 import { ProductInMemorySource } from '../core/scan/adapters/product-in-memory.source';
-import { CodeSource } from '../core/scan/code.source';
+import { PurchaseSource } from '../core/scan/purchaseSource';
 import { fakeAsync } from '@angular/core/testing';
-import { CodeInMemorySource } from '../core/scan/adapters/code-in-memory.source';
+import { PurchaseInMemorySource } from '../core/scan/adapters/purchase-in-memory.source';
 import { ProductSource } from '../core/scan/product.source';
 
 function EAN13BarcodeFake(code: string = '3270190207924') {
@@ -27,10 +27,12 @@ function productFake(
 
 function scanPageOptions(
   {
+    purchases = [],
     products = [],
   }: {
+    purchases?: Purchase[];
     products?: Product[];
-  } = { products: [] }
+  } = { purchases: [], products: [] }
 ) {
   return {
     imports: [ReactiveFormsModule],
@@ -38,8 +40,8 @@ function scanPageOptions(
     providers: [
       ScanUseCases,
       {
-        provide: CodeSource,
-        useValue: new CodeInMemorySource(products.map((_) => _.code)),
+        provide: PurchaseSource,
+        useValue: new PurchaseInMemorySource(purchases),
       },
       {
         provide: ProductSource,
@@ -60,21 +62,34 @@ describe('ScanPageComponent', () => {
     name: 'Brioche',
     price: 3,
   });
-
-  describe('scanned product display', () => {
-    it('should display nothing when not having products', fakeAsync(async () => {
+  const purchaseA = {
+    code: productA.code,
+    quantity: 1,
+  } as const;
+  const purchaseB = {
+    code: productB.code,
+    quantity: 1,
+  } as const;
+  describe('product purchase display', () => {
+    it('should display nothing when not having product purchase', fakeAsync(async () => {
       // GIVEN
-      await render(ScannedProductsComponent, scanPageOptions({ products: [] }));
+      await render(
+        ScannedProductsComponent,
+        scanPageOptions({ purchases: [], products: [productA, productB] })
+      );
       await expect(screen.queryByText(productA.code.toString())).toBeNull();
       await expect(screen.queryByText(productA.name.toString())).toBeNull();
       await expect(screen.queryByText(productA.price.toString())).toBeNull();
     }));
 
-    it('should have name, code and price', fakeAsync(async () => {
+    it('should have name, code and price of the purchase', fakeAsync(async () => {
       // GIVEN
       await render(
         ScannedProductsComponent,
-        scanPageOptions({ products: [productA] })
+        scanPageOptions({
+          purchases: [purchaseA],
+          products: [productA, productB],
+        })
       );
       // THEN
       await expect(screen.queryByText(productA.code.toString())).not.toBeNull();
@@ -93,7 +108,10 @@ describe('ScanPageComponent', () => {
       });
       await render(
         ScannedProductsComponent,
-        scanPageOptions({ products: [productWithoutName] })
+        scanPageOptions({
+          purchases: [{ code: productWithoutName.code, quantity: 1 }],
+          products: [productWithoutName],
+        })
       );
       // THEN
       await expect(
@@ -115,6 +133,7 @@ describe('ScanPageComponent', () => {
       await render(
         ScannedProductsComponent,
         scanPageOptions({
+          purchases: [{ code: productWithoutPrice.code, quantity: 1 }],
           products: [productWithoutPrice],
         })
       );
@@ -126,21 +145,27 @@ describe('ScanPageComponent', () => {
       await expect(screen.queryByText('-€')).not.toBeNull();
     }));
 
-    it('should display the quantity when single product', fakeAsync(async () => {
+    it('should display the quantity when single purchase', fakeAsync(async () => {
       // GIVEN
       await render(
         ScannedProductsComponent,
-        scanPageOptions({ products: [productA] })
+        scanPageOptions({
+          purchases: [{ code: productA.code, quantity: 1 }],
+          products: [productA, productB],
+        })
       );
       // THEN
       await expect(screen.queryByText(`Qty: 1`)).not.toBeNull();
     }));
 
-    it('should display the quantity when multiple same product', fakeAsync(async () => {
+    it('should display the quantity when multiple same product purchase', fakeAsync(async () => {
       // GIVEN
       await render(
         ScannedProductsComponent,
-        scanPageOptions({ products: [productA, productA, productA] })
+        scanPageOptions({
+          purchases: [{ code: productA.code, quantity: 3 }],
+          products: [productA, productB],
+        })
       );
       // THEN
       await expect(screen.queryByText(`Qty: 3`)).not.toBeNull();
@@ -150,7 +175,10 @@ describe('ScanPageComponent', () => {
       // GIVEN
       await render(
         ScannedProductsComponent,
-        scanPageOptions({ products: [productA, productA] })
+        scanPageOptions({
+          purchases: [{ code: productA.code, quantity: 3 }],
+          products: [productA, productB],
+        })
       );
       // THEN
       await expect(screen.getAllByText(productA.name).length).toEqual(1);
@@ -158,11 +186,17 @@ describe('ScanPageComponent', () => {
   });
 
   describe('scanned product actions', () => {
-    it('should be possible to remove a scanned product', fakeAsync(async () => {
+    it('should be possible to remove a product purchase', fakeAsync(async () => {
       // GIVEN
       await render(
         ScannedProductsComponent,
-        scanPageOptions({ products: [productA, productB] })
+        scanPageOptions({
+          purchases: [
+            { code: productA.code, quantity: 1 },
+            { code: productB.code, quantity: 1 },
+          ],
+          products: [productA, productB],
+        })
       );
       // WHEN
       fireEvent.click(
@@ -177,7 +211,10 @@ describe('ScanPageComponent', () => {
       // GIVEN
       await render(
         ScannedProductsComponent,
-        scanPageOptions({ products: [productA] })
+        scanPageOptions({
+          purchases: [{ code: productA.code, quantity: 1 }],
+          products: [productA, productB],
+        })
       );
       await expect(screen.queryByText(productA.name)).not.toBeNull();
       await expect(screen.queryByText(`Qty: 1`)).not.toBeNull();
@@ -194,7 +231,10 @@ describe('ScanPageComponent', () => {
       // GIVEN
       await render(
         ScannedProductsComponent,
-        scanPageOptions({ products: [productA, productA] })
+        scanPageOptions({
+          purchases: [{ code: productA.code, quantity: 2 }],
+          products: [productA, productB],
+        })
       );
       await expect(screen.queryByText(productA.name)).not.toBeNull();
       await expect(screen.queryByText(`Qty: 2`)).not.toBeNull();
@@ -209,18 +249,22 @@ describe('ScanPageComponent', () => {
   });
 
   describe('basket information', () => {
-    it('should display 0 in basket total when not having scanned product', fakeAsync(async () => {
+    it('should display 0 in basket total when not having purchases', fakeAsync(async () => {
       // GIVEN
-      await render(ScannedProductsComponent, scanPageOptions({ products: [] }));
+      await render(
+        ScannedProductsComponent,
+        scanPageOptions({ purchases: [], products: [productA, productB] })
+      );
       // THEN
       await expect(screen.queryByText(`Total :`)).toBeNull();
     }));
 
-    it('should display the sum of the product in basket total when having scanned products', fakeAsync(async () => {
+    it('should display the sum of the product in basket total when having multiple products purchase', fakeAsync(async () => {
       // GIVEN
       await render(
         ScannedProductsComponent,
         scanPageOptions({
+          purchases: [purchaseA, purchaseB],
           products: [
             { ...productA, price: 10 },
             { ...productB, price: 0.75 },
@@ -237,8 +281,8 @@ describe('ScanPageComponent', () => {
       await render(
         ScannedProductsComponent,
         scanPageOptions({
+          purchases: [{ ...purchaseA, quantity: 2 }, purchaseB],
           products: [
-            { ...productA, price: 10 },
             { ...productA, price: 10 },
             { ...productB, price: 0.75 },
           ],
