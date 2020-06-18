@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1592206559009,
+  "timestamp": 1592480241430,
   "index": "/scan-market/index.html",
   "assetGroups": [
     {
@@ -10,13 +10,13 @@
       "urls": [
         "/scan-market/favicon.ico",
         "/scan-market/index.html",
-        "/scan-market/main-es2015.ac94dccc1688698c04eb.js",
-        "/scan-market/main-es5.ac94dccc1688698c04eb.js",
+        "/scan-market/main-es2015.df975a068acbf2832cf8.js",
+        "/scan-market/main-es5.df975a068acbf2832cf8.js",
         "/scan-market/manifest.webmanifest",
-        "/scan-market/polyfills-es2015.690002c25ea8557bb4b0.js",
-        "/scan-market/polyfills-es5.4da951a34919c71abe40.js",
-        "/scan-market/runtime-es2015.1eba213af0b233498d9d.js",
-        "/scan-market/runtime-es5.1eba213af0b233498d9d.js",
+        "/scan-market/polyfills-es2015.f332a089ad1600448873.js",
+        "/scan-market/polyfills-es5.24ecfbfe3d68edc0f58c.js",
+        "/scan-market/runtime-es2015.0dae8cbc97194c7caed4.js",
+        "/scan-market/runtime-es5.0dae8cbc97194c7caed4.js",
         "/scan-market/styles.485c2b25d9424c376d2d.css"
       ],
       "patterns": []
@@ -90,14 +90,14 @@
     "/scan-market/assets/splashscreens/iphonexr_splash.png": "dbb16767fd645ea3868da7ff5acd7ba0b16b07a7",
     "/scan-market/assets/splashscreens/iphonexsmax_splash.png": "605505db57597c0c3bbdba989a458c221dadbe25",
     "/scan-market/favicon.ico": "84a82e037369702a328524836d7e9ef2d5962122",
-    "/scan-market/index.html": "f4e6a7d59a937e8f5cac0196511976e86ffdf514",
-    "/scan-market/main-es2015.ac94dccc1688698c04eb.js": "7a36d1a28750cda0e8fef0be9b8d334193a4dfd7",
-    "/scan-market/main-es5.ac94dccc1688698c04eb.js": "6849874a090b44a6c5f686e22d07b9b4307818f5",
+    "/scan-market/index.html": "58c0a7ce927c3b07eeeb91b0cb485b3319ea8266",
+    "/scan-market/main-es2015.df975a068acbf2832cf8.js": "ba566bfead54eed915cea292b5b99051e70b2473",
+    "/scan-market/main-es5.df975a068acbf2832cf8.js": "4b3d006bd63e2ea5b34221af9b538930eb94913c",
     "/scan-market/manifest.webmanifest": "143c9f22f2a2c31984e616f95ea52b28d027c216",
-    "/scan-market/polyfills-es2015.690002c25ea8557bb4b0.js": "72ad4ccc0a3916ae4598199447cdeadd6d380570",
-    "/scan-market/polyfills-es5.4da951a34919c71abe40.js": "0aee34bd067d5a6a0a61ef2245421f87998eda1b",
-    "/scan-market/runtime-es2015.1eba213af0b233498d9d.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",
-    "/scan-market/runtime-es5.1eba213af0b233498d9d.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",
+    "/scan-market/polyfills-es2015.f332a089ad1600448873.js": "72ad4ccc0a3916ae4598199447cdeadd6d380570",
+    "/scan-market/polyfills-es5.24ecfbfe3d68edc0f58c.js": "0aee34bd067d5a6a0a61ef2245421f87998eda1b",
+    "/scan-market/runtime-es2015.0dae8cbc97194c7caed4.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",
+    "/scan-market/runtime-es5.0dae8cbc97194c7caed4.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",
     "/scan-market/styles.485c2b25d9424c376d2d.css": "f48c4ce4cdcdf887413a1845c4cd71bd6c57f2f5"
   },
   "navigationUrls": [
