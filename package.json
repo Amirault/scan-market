@@ -32,7 +32,7 @@
     "body-parser": "^1.18.3",
     "bootstrap": "^4.5.0",
     "compression": "^1.7.4",
-    "express": "^4.16.3",
+    "express": "^4.17.3",
     "jsbarcode": "^3.11.0",
     "ngx-barcode6": "^1.0.10",
     "node-fetch": "^2.6.0",
